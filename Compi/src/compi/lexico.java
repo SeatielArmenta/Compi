@@ -10,6 +10,12 @@ package compi;
  * @author seati
  */
 public class lexico {
+    nodo cabeza=null,p;
+    int estado=0,columna,valorMT,numRenglon=1,caracter=0;
+    String lexema="";
+    boolean errorEncontrado=false;
+    String archivo="C://compi/codigo.txt";
+    
       int[][] matriz = {/*   L,        @,     _,    d,         +,           -,              *,              /,         ^,          <,           >,          =,           !,           &,           |,             (,              ),          {,             },            , ,             ;,           ",           eb,        tab,          nl,       . ,              eof,         oc */
                              /*    0,       1,       2,     3,        4,          5,              6,             7,         8,          9,         10,        11,         12,        13,         14,          15,           16,       17,          18,           19,          20,        21,          22,          23,         24,      25,              26,        27  */
                     /* 0 */{      1,       1,      1,      2,      103,       104,         105,           5,      107,        8,          9,         10,         11,        12,          13,         117,        118,       119,      120,         124,        125,          14,        0,             0,           0,      505,          505,      505},
