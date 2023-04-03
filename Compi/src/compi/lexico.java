@@ -65,105 +65,110 @@ public class lexico {
     };
     
     
-    public lexico(){
-        try{
-            RandomAccessFile file = new RandomAccessFile(archivo,"r");
-            while(caracter !=-1){
-                caracter=file.read();
-                
+    public lexico() {
+        try {
+            RandomAccessFile file = new RandomAccessFile(archivo, "r");
+            while (caracter != -1) {
+                caracter = file.read();
+
                 if (Character.isLetter(((char) caracter))) { //letra
-                    columna=0;
-                }else if (Character.isDigit(((char) caracter))) {
-                    columna=3;
-                }else{
-                    switch ((char) caracter){
+                    columna = 0;
+                } else if (Character.isDigit(((char) caracter))) {
+                    columna = 3;
+                } else {
+                    switch ((char) caracter) {
                         case '@':
-                            columna=1;
+                            columna = 1;
                             break;
                         case '_':
-                            columna=2;
+                            columna = 2;
                             break;
                         case '+':
-                            columna =4;
+                            columna = 4;
                             break;
                         case '-':
-                            columna =5;
-                            break;    
+                            columna = 5;
+                            break;
                         case '*':
-                            columna =6;
-                            break;    
+                            columna = 6;
+                            break;
                         case '/':
-                            columna =7;
-                            break;  
+                            columna = 7;
+                            break;
                         case '^':
-                            columna =8;
-                            break;    
+                            columna = 8;
+                            break;
                         case '<':
-                            columna =9;
+                            columna = 9;
                             break;
                         case '>':
-                            columna =10;
+                            columna = 10;
                             break;
                         case '=':
-                            columna =11;
+                            columna = 11;
                             break;
                         case '!':
-                            columna =12;
+                            columna = 12;
                             break;
                         case '&':
-                            columna =13;
+                            columna = 13;
                             break;
                         case '|':
-                            columna =14;
-                            break;    
+                            columna = 14;
+                            break;
                         case '(':
-                            columna =15;
+                            columna = 15;
                             break;
                         case ')':
-                            columna =16;
+                            columna = 16;
                             break;
                         case '{':
-                            columna =17;
+                            columna = 17;
                             break;
                         case '}':
-                            columna =18;
+                            columna = 18;
                             break;
                         case ',':
-                            columna =19;
+                            columna = 19;
                             break;
                         case ';':
-                            columna =20;
+                            columna = 20;
                             break;
                         case '"':
-                            columna =21;
+                            columna = 21;
                             break;
                         case ' ': //espacio en blanco
-                            columna =22;
+                            columna = 22;
                             break;
                         case 9: //tabulador
-                            columna =23;
+                            columna = 23;
                             break;
                         case 10: //nueva linea
                         {
-                           columna=24;
-                            numRenglon=numRenglon+1;
-                    }
-                    break;    
-                        case 13:
-                            columna=28;
+                            columna = 24;
+                            numRenglon = numRenglon + 1;
+                        }
+                        break;
+                        case 13://retorno de carro
+                            columna = 28;
                             break;
                         case '.':
-                            columna =25;
+                            columna = 25;
                             break;
-                        
+
                         default://otro caracter
-                            columna =27;
+                            columna = 27;
                             break;
                     }
                 }
+                valorMT=matriz[estado][columna];
+                if (valorMT<100) {
+                    
+                }
+
             }
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
     
