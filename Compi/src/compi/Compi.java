@@ -16,9 +16,6 @@ public class Compi {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println("equisde");
-        System.out.println("joto");
-        System.out.println("ily");
         
         lexico Lexico = new lexico();
        

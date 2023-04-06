@@ -64,10 +64,10 @@ public class lexico {
 
     };
     
-    
+    RandomAccessFile file=null;
     public lexico() {
         try {
-            RandomAccessFile file = new RandomAccessFile(archivo, "r");
+            file = new RandomAccessFile(archivo, "r");
             while (caracter != -1) {
                 caracter = file.read();
 
@@ -162,14 +162,46 @@ public class lexico {
                     }
                 }
                 valorMT=matriz[estado][columna];
-                if (valorMT<100) {
-                    
+                if (valorMT<100) { //cambiar estado
+                   estado =valorMT;
+                   
+                    if (estado==0) {
+                        lexema="";
+                    }else{
+                        lexema=lexema+ (char) caracter;
+                    }
+                }else if (valorMT >=100 && valorMT < 500) { //estado final
+                    if (valorMT==100) {
+                        validarPalabraReservada();
+                    }
+                    // Valores finales adelantados: 100,101,102,106,123,108,109,116 
+                    if (valorMT==100|| valorMT==101||valorMT==102||valorMT==106||valorMT==123||valorMT==108||valorMT==109||valorMT==116||valorMT>=200 ){
+                        file.seek(file.getFilePointer()-1);
+                    }else{
+                        lexema=lexema+(char)caracter;
+                    }
+                    insertarNodo();
+                    estado=0;
+                    lexema="";
+                } else { //estado de error
+                    imprimirError();
+                    break;
                 }
 
             }
-            
+            imprimirNodos();
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
+        }finally{
+            try {
+                if (file !=null) {
+                file.close(); 
+            }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+    
+            
         }
     }
     
