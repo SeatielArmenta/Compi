@@ -19,6 +19,8 @@ public class Compi {
         System.out.println("equisde");
         System.out.println("joto");
         System.out.println("ily");
+        
+        lexico Lexico = new lexico();
        
     }
     
