@@ -167,6 +167,7 @@ public class lexico {
                 }
 
             }
+            
         } catch (Exception e) {
 
         }
@@ -184,4 +185,29 @@ public class lexico {
         }
     }
     
+    private void imprimirNodos(){
+    p=cabeza;
+    while(p!=null){
+        System.out.println(p.lexema+" "+p.token+" "+p.renglon);
+        p=p.sig;
+    }
+    }
+    
+    private void validarPalabraReservada(){
+        for (String[] palreservada : palabrasReservadas) {
+            if (lexema.equals(palreservada[0])) {
+                valorMT= Integer.valueOf(palreservada[1]);            }
+        }
+    }
+    
+    private void imprimirError(){
+        if (caracter !=-1 && valorMT>=500) {
+            for (String[] error : errores) {
+                if (valorMT == Integer.valueOf(error[1])) {
+                    System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                }
+            }
+            errorEncontrado=true;
+        }
+    }
 }
