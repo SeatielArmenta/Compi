@@ -5,6 +5,7 @@
  */
 package compi;
 import java.io.RandomAccessFile;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,7 +28,7 @@ public class lexico {
                    /* 4 */{  102,   102,  102,      4,      102,       102,         102,       102,      102,    102,      102,       102,       102,      102,        102,         102,        102,       102,      102,         102,        102,        102,        102,     102,       102,      102,        102,     102,      102  }, 
                    /* 5 */{  106,   106,  106,    106,      106,       106,             6,       106,      106,    106,      106,       106,       106,      106,        106,         106,        106,       106,      106,         106,        106,        106,        106,     106,       106,      106,      106,     106,       106 },
                    /* 6 */{    6,       6,          6,      6,          6,           6,             7,           6,          6,        6,          6,           6,           6,          6,            6,             6,            6,           6,          6,             6,            6,            6,        6,             6,           6,          6,      501,         6,        6}, 
-                   /* 7 */{    6,       6,          6,      6,          6,           6,             6,           0,          6,        6,          6,           6,           6,          6,            6,             6,            6,           6,          6,             6,            6,            6,        6,             6,           6,          6,          6,         6,        6},
+                   /* 7 */{    6,       6,          6,      6,          6,           6,             6,           0,          6,        6,          6,           6,           6,          6,            6,             6,            6,           6,          6,             6,            6,            6,        6,             6,           6,          6,          501,         6,        6},
                    /* 8 */{  108,   108,  108,  108,      108,       108,         108,       108,      108,    108,      108,       110,       108,      108,        108,         108,        108,       108,      108,         108,        108,        108,        108,     108,       108,      108,        108,     108,       108},
                    /* 9 */{  109,   109,  109,  109,      109,       109,         109,       109,      109,    109,      109,       111,       109,      109,        109,         109,        109,       109,      109,         109,        109,        109,        109,     109,       109,      109,        109,     109,       109},
                    /* 10 */{ 123,   123,  123,  123,      123,       123,         123,       123,      123,    123,      123,       112,       123,      123,        123,         123,        123,       123,      123,         123,        123,        123,        123,     123,       123,      123,        123,    123,      123 },
@@ -155,9 +156,17 @@ public class lexico {
                         case '.':
                             columna = 25;
                             break;
+                            
+
 
                         default://otro caracter
-                            columna = 27;
+                            if (caracter==-1) {
+                                columna=26;
+                                
+                            }else{
+                              columna = 27;  
+                            }
+                            
                             break;
                     }
                 }
@@ -233,13 +242,19 @@ public class lexico {
     }
     
     private void imprimirError(){
-        if (caracter !=-1 && valorMT>=500) {
+        if ((caracter !=-1 && valorMT>=500)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
                     System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
             errorEncontrado=true;
+        }else if (caracter ==-1 && valorMT==501) {
+            for (String[] error : errores) {
+                if (valorMT == Integer.valueOf(error[1])) {
+                    System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                }
+            }
         }
     }
 }
