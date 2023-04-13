@@ -255,6 +255,7 @@ public class lexico {
                     System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
+            errorEncontrado=true;
         }
     }
 }
