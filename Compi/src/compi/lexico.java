@@ -245,14 +245,14 @@ public class lexico {
         if ((caracter !=-1 && valorMT>=500)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                    System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                    System.out.println("El error encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
             errorEncontrado=true;
         }else if (caracter ==-1 && valorMT==501) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                    System.out.println("El valor encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                    System.out.println("El error encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
             errorEncontrado=true;
