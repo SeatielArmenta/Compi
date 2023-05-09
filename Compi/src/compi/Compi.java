@@ -18,6 +18,7 @@ public class Compi {
         // TODO code application logic here
         
         lexico Lexico = new lexico();
+        sintaxis Sintaxis=new sintaxis(Lexico.cabeza);
        
     }
     

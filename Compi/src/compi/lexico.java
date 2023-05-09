@@ -51,7 +51,8 @@ public class lexico {
         {"int", "209"},
         {"false", "210"},
         {"true", "211"},
-        {"string", "212"}
+        {"string", "212"},
+        {"boolean","213"}
 
     };
 
