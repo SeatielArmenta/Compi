@@ -18,7 +18,9 @@ public class Compi {
         // TODO code application logic here
         
         lexico Lexico = new lexico();
+        System.out.println("Analisis Lexico completado sin errores");
         sintaxis Sintaxis=new sintaxis(Lexico.cabeza);
+       
        
     }
     
