@@ -11,50 +11,68 @@ package compi;
  */
 public class sintaxis {
 
+    boolean ed = false;
+    String errores[][] = {
+        {"Se espera main", "1"},
+        {"Se espera (", "2"},
+        {"Se espera )", "3"},
+        {"Se espera {", "4"},
+        {"Se espera {", "5"},
+        {"Se espera identificador", "6"},
+        {"Se espera tipo de dato", "7"},
+        {"Se espera ;", "8"},
+        {"Se espera =", "9"},
+        {"Se espera statement", "10"},
+        {"Se espera operador relacional", "11"},
+        {"Se espera operador aditivo", "12"},
+        {"Se espera factor", "13"},
+        {"Se espera operador multiplicativo", "14"}
+
+    };
     nodo p = null;
 
     public sintaxis(nodo n) {
-        p = n;
-        while (p != null) {
-            if (p.token == 203) {
-                p = p.sig;
-                if (p.token == 117) {
+        try {
+            p = n;
+            while (p != null) {
+                if (p.token == 203) {
                     p = p.sig;
-                    if (p.token == 118) {
+                    if (p.token == 117) {
                         p = p.sig;
-                        if (p.token == 119) {
+                        if (p.token == 118) {
                             p = p.sig;
-                            variables();
+                            if (p.token == 119) {
+                                p = p.sig;
+                                variables();
 
-                            statements();
-                            ciclostatements();
-                            if (p.token==120) {
-                             System.out.println("Analisis sintactico completado correctamente");    
-                            }else{
-                                System.out.println("Se espera }");
+                                statements();
+                                ciclostatements();
+                                if (p.token == 120) {
+                                    System.out.println("Analisis sintactico completado correctamente");
+                                }
+                            } else {
+                                imprimirError(4);
                             }
                         } else {
-                            System.out.println("Se espera {");
-
+                            imprimirError(3);
                         }
                     } else {
-                        System.out.println("Se espera )");
-
+                        imprimirError(2);
                     }
                 } else {
-                    System.out.println("Se espera (");
+                    imprimirError(1);
 
                 }
-            } else {
-                System.out.println("Se espera la palabra main");
 
             }
-            break;
-        }
 
+        } catch (NullPointerException e) {
+            imprimirError(5);
+        }
     }
-    private void ciclostatements(){
-        if (p.token!=120) {
+
+    private void ciclostatements() {
+        if (p.token != 120) {
             statements();
             ciclostatements();
         }
@@ -63,11 +81,11 @@ public class sintaxis {
     private void variables() {
         tipos();
         if (p.token == 100) {
-            p = p.sig;
+            p = p.sig;;
             ciclovariables();
 
         } else {
-            System.out.println("Se espera identificador");
+            imprimirError(6);
 
         }
     }
@@ -75,9 +93,9 @@ public class sintaxis {
     private void tipos() {
 
         if (p.token == 209 || p.token == 208 || p.token == 212 || p.token == 213) {
-            p = p.sig;
+            p = p.sig;;
         } else {
-            System.out.println("Se espera tipo de dato");
+            imprimirError(7);
 
         }
 
@@ -85,21 +103,21 @@ public class sintaxis {
 
     private void ciclovariables() {
         if (p.token == 124) {
-            p = p.sig;
+            p = p.sig;;
             if (p.token == 100) {
-                p = p.sig;
+                p = p.sig;;
                 ciclovariables();
 
             } else {
-                System.out.println("Se espera un identificador");
+                imprimirError(5);
 
             }
 
         } else if (p.token == 125) {
-            p = p.sig;
+            p = p.sig;;
 
         } else {
-            System.out.println("Se espera un ;");
+            imprimirError(8);
         }
 
     }
@@ -111,128 +129,126 @@ public class sintaxis {
                 p = p.sig;
                 exp_cond();
                 if (p.token == 118) {
-                    p = p.sig;
+                    p = p.sig;;
                     if (p.token == 119) {
-                        p = p.sig;
+                        p = p.sig;;
 
                         statements();
                         ciclostatements();
 
                         if (p.token == 120) {
 
-                            p = p.sig;
+                            p = p.sig;;
 
                             if (p.token == 202) {
-                                p = p.sig;
+                                p = p.sig;;
                                 if (p.token == 119) {
-                                    p = p.sig;
+                                    p = p.sig;;
                                     statements();
                                     ciclostatements();
                                     if (p.token == 120) {
-                                        p = p.sig;
+                                        p = p.sig;;
                                     } else {
-                                        System.out.println("Se espera }");
+                                        imprimirError(5);
                                     }
                                 } else {
-                                    System.out.println("Se espera {");
+                                    imprimirError(4);
                                 }
                             }
                         } else {
-                            System.out.println("Se espera }");
+                            imprimirError(5);
                         }
                     } else {
-                        System.out.println("Se espera {");
+                        imprimirError(4);
                     }
                 } else {
-                    System.out.println("Se espera )");
+                    imprimirError(3);
                 }
             } else {
-                System.out.println("Se espera un (");
+                imprimirError(2);
             }
         } //Ciclo while
         else if (p.token == 204) {
-            p = p.sig;
+            p = p.sig;;
             if (p.token == 117) {
-                p = p.sig;
+                p = p.sig;;
                 exp_cond();
                 if (p.token == 118) {
-                    p = p.sig;
+                    p = p.sig;;
                     if (p.token == 119) {
-                        p = p.sig;
+                        p = p.sig;;
                         statements();
                         ciclostatements();
                         if (p.token == 120) {
-                            p = p.sig;
+                            p = p.sig;;
                         } else {
-                            System.out.println("Se espera }");
+                            imprimirError(5);
                         }
                     } else {
-                        System.out.println("Se espera {");
+                        imprimirError(4);
                     }
                 } else {
-
-                    System.out.println("Se espera )");
+                    imprimirError(3);
                 }
             } else {
-
-                System.out.println("Se espera (");
+                imprimirError(2);
             }
 
         } //Funcion de imprimir
         else if (p.token == 206) {
-            p = p.sig;
+            p = p.sig;;
             if (p.token == 117) {
-                p = p.sig;
+                p = p.sig;;
                 if (p.token == 100) {
-                    p = p.sig;
+                    p = p.sig;;
                     cicloimpresion();
                     if (p.token == 118) {
-                        p=p.sig;
+                        p = p.sig;;
                         if (p.token == 125) {
-                            p = p.sig;
+                            p = p.sig;;
                         } else {
-                            System.out.println("Se espera ;");
+                            imprimirError(8);
                         }
                     } else {
-                       
-                        System.out.println("Se espera )");
+
+                        imprimirError(3);
                     }
                 } else {
-                    System.out.println("Se espera identificador");
+                    imprimirError(6);
                 }
 
             } else {
-                System.out.println("Se espera (");
+                imprimirError(2);
             }
 
         } //Evaluacion de variable
         else if (p.token == 100) {
 
-            p = p.sig;
+            p = p.sig;;
             if (p.token == 123) {
-                p = p.sig;
+                p = p.sig;;
                 exp_sim();
 
                 if (p.token == 125) {
-                    p = p.sig;
+                    p = p.sig;;
 
                 } else {
-
-                    System.out.println("Se espera ;");
+                    imprimirError(8);
                 }
             } else {
-                System.out.println("Se espera =");
+                imprimirError(9);
             }
-        }else if (p.token==120) {
-            
-        }  else {
-            System.out.println("Se espera un statement");
+        } else if (p.token == 120) {
+
+        } else {
+            imprimirError(10);
         }
 
     }
 
     private void exp_cond() {
         exp_sim();
+
         exp_rel();
         exp_sim();
 
@@ -240,34 +256,34 @@ public class sintaxis {
 
     private void cicloimpresion() {
         if (p.token == 124) {
-            p = p.sig;
+            p = p.sig;;
             if (p.token == 100) {
-                p = p.sig;
+                p = p.sig;;
                 if (p.token == 124) {
                     cicloimpresion();
                 }
             } else {
-                System.out.println("Se espera identificador");
+                imprimirError(6);
             }
-        } 
+        }
     }
 
     private void exp_rel() {
         if (p.token == 108) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 109) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 110) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 111) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 112) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 113) {
-            p = p.sig;
+            p = p.sig;;
         } else {
 
-            System.out.println("Se espera un operador relacional");
+            imprimirError(11);
         }
     }
 
@@ -286,13 +302,13 @@ public class sintaxis {
 
     private void op_aditivo() {
         if (p.token == 103) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 104) {
-            p = p.sig;
+            p = p.sig;;
         } else if (p.token == 115) {
-            p = p.sig;
+            p = p.sig;;
         } else {
-            System.out.println("Se espera un operador aditivo");
+            imprimirError(12);
         }
     }
 
@@ -330,13 +346,13 @@ public class sintaxis {
             if (p.token == 118) {
                 p = p.sig;
             } else {
-                System.out.println("Se espera )");
+                imprimirError(3);
             }
         } else if (p.token == 103 || p.token == 104) {
             signo();
             termino();
         } else {
-            System.out.println("Se espera factor");
+            imprimirError(13);
         }
     }
 
@@ -348,9 +364,19 @@ public class sintaxis {
         } else if (p.token == 114) {
             p = p.sig;
         } else {
-            System.out.println("Se espera un operador multiplicativo");
+            imprimirError(14);
         }
 
+    }
+
+    private void imprimirError(int nerror) {
+        for (String[] error : errores) {
+            if (nerror == Integer.valueOf(error[1])) {
+
+                System.out.println(error[0]);
+                System.exit(0);
+            }
+        }
     }
 
 }
