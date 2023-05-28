@@ -52,7 +52,8 @@ public class lexico {
         {"false", "210"},
         {"true", "211"},
         {"string", "212"},
-        {"boolean","213"}
+        {"boolean","213"},
+        {"getValue","214"}
 
     };
 

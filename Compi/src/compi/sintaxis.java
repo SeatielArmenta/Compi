@@ -11,13 +11,13 @@ package compi;
  */
 public class sintaxis {
 
-    boolean ed = false;
+   
     String errores[][] = {
         {"Se espera main", "1"},
         {"Se espera (", "2"},
         {"Se espera )", "3"},
         {"Se espera {", "4"},
-        {"Se espera {", "5"},
+        {"Se espera }", "5"},
         {"Se espera identificador", "6"},
         {"Se espera tipo de dato", "7"},
         {"Se espera ;", "8"},
@@ -26,7 +26,9 @@ public class sintaxis {
         {"Se espera operador relacional", "11"},
         {"Se espera operador aditivo", "12"},
         {"Se espera factor", "13"},
-        {"Se espera operador multiplicativo", "14"}
+        {"Se espera operador multiplicativo", "14"},
+        {"Se espera valor o entrada de teclado", "15"},
+        {"Se espera new", "16"}
 
     };
     nodo p = null;
@@ -43,12 +45,14 @@ public class sintaxis {
                             p = p.sig;
                             if (p.token == 119) {
                                 p = p.sig;
+                                
                                 variables();
 
                                 statements();
                                 ciclostatements();
                                 if (p.token == 120) {
                                     System.out.println("Analisis sintactico completado correctamente");
+                                    break;
                                 }
                             } else {
                                 imprimirError(4);
@@ -81,8 +85,9 @@ public class sintaxis {
     private void variables() {
         tipos();
         if (p.token == 100) {
-            p = p.sig;;
+            p = p.sig;
             ciclovariables();
+            
 
         } else {
             imprimirError(6);
@@ -91,32 +96,42 @@ public class sintaxis {
     }
 
     private void tipos() {
-
-        if (p.token == 209 || p.token == 208 || p.token == 212 || p.token == 213) {
-            p = p.sig;;
+        if (p.token==207) {
+            p=p.sig;
+           if (p.token == 209 || p.token == 208 || p.token == 212 || p.token == 213) {
+            p = p.sig;
         } else {
             imprimirError(7);
 
+        } 
+        }else{
+            imprimirError(16);
         }
+        
 
     }
 
     private void ciclovariables() {
         if (p.token == 124) {
-            p = p.sig;;
+            p = p.sig;
             if (p.token == 100) {
-                p = p.sig;;
+                p = p.sig;
                 ciclovariables();
 
             } else {
-                imprimirError(5);
+                imprimirError(6);
 
             }
 
         } else if (p.token == 125) {
-            p = p.sig;;
+            p = p.sig;
+            if (p.token==207) {
+                variables();
+            }
+            
 
         } else {
+            
             imprimirError(8);
         }
 
@@ -129,25 +144,25 @@ public class sintaxis {
                 p = p.sig;
                 exp_cond();
                 if (p.token == 118) {
-                    p = p.sig;;
+                    p = p.sig;
                     if (p.token == 119) {
-                        p = p.sig;;
+                        p = p.sig;
 
                         statements();
                         ciclostatements();
 
                         if (p.token == 120) {
 
-                            p = p.sig;;
+                            p = p.sig;
 
                             if (p.token == 202) {
-                                p = p.sig;;
+                                p = p.sig;
                                 if (p.token == 119) {
-                                    p = p.sig;;
+                                    p = p.sig;
                                     statements();
                                     ciclostatements();
                                     if (p.token == 120) {
-                                        p = p.sig;;
+                                        p = p.sig;
                                     } else {
                                         imprimirError(5);
                                     }
@@ -169,18 +184,18 @@ public class sintaxis {
             }
         } //Ciclo while
         else if (p.token == 204) {
-            p = p.sig;;
+            p = p.sig;
             if (p.token == 117) {
-                p = p.sig;;
+                p = p.sig;
                 exp_cond();
                 if (p.token == 118) {
-                    p = p.sig;;
+                    p = p.sig;
                     if (p.token == 119) {
-                        p = p.sig;;
+                        p = p.sig;
                         statements();
                         ciclostatements();
                         if (p.token == 120) {
-                            p = p.sig;;
+                            p = p.sig;
                         } else {
                             imprimirError(5);
                         }
@@ -196,16 +211,16 @@ public class sintaxis {
 
         } //Funcion de imprimir
         else if (p.token == 206) {
-            p = p.sig;;
+            p = p.sig;
             if (p.token == 117) {
-                p = p.sig;;
+                p = p.sig;
                 if (p.token == 100) {
-                    p = p.sig;;
+                    p = p.sig;
                     cicloimpresion();
                     if (p.token == 118) {
-                        p = p.sig;;
+                        p = p.sig;
                         if (p.token == 125) {
-                            p = p.sig;;
+                            p = p.sig;
                         } else {
                             imprimirError(8);
                         }
@@ -224,13 +239,31 @@ public class sintaxis {
         } //Evaluacion de variable
         else if (p.token == 100) {
 
-            p = p.sig;;
+            p = p.sig;
             if (p.token == 123) {
-                p = p.sig;;
-                exp_sim();
+                p = p.sig;
+                if (p.token==100 || p.token==101||p.token==102||p.token==117||p.token==116||p.token==104||p.token==103) {
+                    exp_sim();
+                } else if (p.token==214) {
+                    p = p.sig;
+                    if (p.token==117) {
+                        p = p.sig;
+                        if (p.token==118) {
+                            p = p.sig;
+                        }else{
+                            imprimirError(3);
+                        }
+                    }else{
+                        imprimirError(2);
+                    }
+                    
+                } else{
+                    imprimirError(15);
+                }
+                
 
                 if (p.token == 125) {
-                    p = p.sig;;
+                    p = p.sig;
 
                 } else {
                     imprimirError(8);
@@ -256,9 +289,9 @@ public class sintaxis {
 
     private void cicloimpresion() {
         if (p.token == 124) {
-            p = p.sig;;
+            p = p.sig;
             if (p.token == 100) {
-                p = p.sig;;
+                p = p.sig;
                 if (p.token == 124) {
                     cicloimpresion();
                 }
@@ -270,17 +303,17 @@ public class sintaxis {
 
     private void exp_rel() {
         if (p.token == 108) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 109) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 110) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 111) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 112) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 113) {
-            p = p.sig;;
+            p = p.sig;
         } else {
 
             imprimirError(11);
@@ -302,11 +335,11 @@ public class sintaxis {
 
     private void op_aditivo() {
         if (p.token == 103) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 104) {
-            p = p.sig;;
+            p = p.sig;
         } else if (p.token == 115) {
-            p = p.sig;;
+            p = p.sig;
         } else {
             imprimirError(12);
         }
@@ -374,6 +407,7 @@ public class sintaxis {
             if (nerror == Integer.valueOf(error[1])) {
 
                 System.out.println(error[0]);
+                
                 System.exit(0);
             }
         }
