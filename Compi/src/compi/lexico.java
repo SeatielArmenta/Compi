@@ -200,7 +200,14 @@ public class lexico {
                 }
 
             }
+            if (errorEncontrado) {
+                System.out.println("Analisis lexico completado con errores");
+                System.exit(0);
+            }else{
             imprimirNodos();
+            System.out.println("Analisis Lexico completado sin errores");
+            }
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }finally{
@@ -247,7 +254,7 @@ public class lexico {
         if ((caracter !=-1 && valorMT>=500)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                    System.out.println("El error encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                    System.out.println("El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
             errorEncontrado=true;
@@ -260,7 +267,7 @@ public class lexico {
                         caracter = file.read();
                     } catch (Exception e) {
                     }
-                    System.out.println("El error encontrado es:" +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                    System.out.println("El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
                 }
             }
             errorEncontrado=true;
