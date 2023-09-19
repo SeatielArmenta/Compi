@@ -196,16 +196,16 @@ public class lexico {
                     lexema="";
                 } else { //estado de error
                     imprimirError();
-                    break;
                 }
 
             }
             if (errorEncontrado) {
-                System.out.println("Analisis lexico completado con errores");
-                System.exit(0);
+                  imprimirNodos();
+                System.out.println("Analisis lexico completado con errores ❌❌❌");
+             
             }else{
             imprimirNodos();
-            System.out.println("Analisis Lexico completado sin errores");
+            System.out.println("Analisis Lexico completado sin errores 😊😊😊");
             }
             
         } catch (Exception e) {
