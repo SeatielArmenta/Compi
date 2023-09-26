@@ -408,7 +408,6 @@ public class sintaxis {
 
                 System.out.println(error[0]);
                 
-                System.exit(0);
             }
         }
     }

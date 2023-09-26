@@ -12,11 +12,12 @@ import javax.swing.JOptionPane;
  * @author seati
  */
 public class lexico {
+    String Impresion="";
     nodo cabeza=null,p;
     int estado=0,columna,valorMT,numRenglon=1,caracter=0;
     String lexema="";
     boolean errorEncontrado=false;
-    String archivo="C://compi/codigo.txt";
+    String archivo="";
     
       int[][] matriz = {
                         /*     L,       @,      _,     d,      +,       -,      *,      /,      ^,      <,        >,      =,       !,       &,      |,       (,       ),      {,     },     , ,      ;,    ",    eb,    tab,    nl,      . ,    eof,   oc,   rt*/
@@ -68,7 +69,8 @@ public class lexico {
     };
     
     RandomAccessFile file=null;
-    public lexico() {
+    public lexico(String archivoPath) {
+        archivo=archivoPath;
         try {
             file = new RandomAccessFile(archivo, "r");
             while (caracter != -1) {
@@ -200,14 +202,15 @@ public class lexico {
 
             }
             if (errorEncontrado) {
-                  imprimirNodos();
-                System.out.println("Analisis lexico completado con errores ❌❌❌");
+               
+               //   imprimirNodos();
+                Impresion+="Analisis lexico completado con errores ❌❌❌";
              
             }else{
-            imprimirNodos();
-            System.out.println("Analisis Lexico completado sin errores 😊😊😊");
+          
+          //  imprimirNodos();
+            Impresion+="Analisis Lexico completado sin errores 😊😊😊";
             }
-            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }finally{
@@ -238,7 +241,8 @@ public class lexico {
     private void imprimirNodos(){
     p=cabeza;
     while(p!=null){
-        System.out.println(p.lexema+" "+p.token+" "+p.renglon);
+      Impresion+= (p.lexema+" |  "+p.token+" |  "+p.renglon);
+      Impresion+=System.lineSeparator();
         p=p.sig;
     }
     }
@@ -254,7 +258,8 @@ public class lexico {
         if ((caracter !=-1 && valorMT>=500)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                    System.out.println("El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                  Impresion+="El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon;
+                  Impresion+=System.lineSeparator();
                 }
             }
             errorEncontrado=true;
@@ -267,7 +272,8 @@ public class lexico {
                         caracter = file.read();
                     } catch (Exception e) {
                     }
-                    System.out.println("El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon);
+                    Impresion+="El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon;
+                    Impresion+=System.lineSeparator();
                 }
             }
             errorEncontrado=true;

@@ -17,9 +17,10 @@ public class Compi {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        lexico Lexico = new lexico();
+        Interfaz programa=new Interfaz();
+        programa.setVisible(true);
         
-        sintaxis Sintaxis=new sintaxis(Lexico.cabeza);
+      //  sintaxis Sintaxis=new sintaxis(Lexico.cabeza);
        
        
     }
