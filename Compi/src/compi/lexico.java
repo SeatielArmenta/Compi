@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package compi;
 import java.io.RandomAccessFile;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author seati
- */
 public class lexico {
     String Impresion="";
     nodo cabeza=null,p;
@@ -38,8 +30,8 @@ public class lexico {
                    /* 13 */{ 503,     503,    503,   503,    503,     503,    503,    503,    503,    503,      503,    503,     503,     503,    115,     503,     503,    503,   503,    503,    503,  503,   503,    503,   503,     503,    503,  503,   503},
                    /* 14 */{  14,      14,     14,    14,     14,      14,     14,     14,     14,     14,       14,     14,      14,      14,     14,      14,      14,     14,    14,     14,     14,  122,    14,     14,   504,      14,    504,   14,   504}
           
-        };
-        String palabrasReservadas[][] = {
+      };
+    String palabrasReservadas[][] = {
         {"break", "200"},
         {"if", "201"},
         {"else", "202"},
@@ -53,8 +45,8 @@ public class lexico {
         {"false", "210"},
         {"true", "211"},
         {"string", "212"},
-        {"boolean","213"},
-        {"getValue","214"}
+        {"boolean", "213"},
+        {"getValue", "214"}
 
     };
 
@@ -67,10 +59,11 @@ public class lexico {
         {"caracter no valido", "505"}
 
     };
-    
-    RandomAccessFile file=null;
+
+    RandomAccessFile file = null;
+
     public lexico(String archivoPath) {
-        archivo=archivoPath;
+        archivo = archivoPath;
         try {
             file = new RandomAccessFile(archivo, "r");
             while (caracter != -1) {
@@ -160,123 +153,126 @@ public class lexico {
                         case '.':
                             columna = 25;
                             break;
-                            
-
 
                         default://otro caracter
-                            if (caracter==-1) {
-                                columna=26;
-                                
-                            }else{
-                              columna = 27;  
+                            if (caracter == -1) {
+                                columna = 26;
+
+                            } else {
+                                columna = 27;
                             }
-                            
+
                             break;
                     }
                 }
-                valorMT=matriz[estado][columna];
-                if (valorMT<100) { //cambiar estado
-                   estado =valorMT;
-                   
-                    if (estado==0) {
-                        lexema="";
-                    }else{
-                        lexema=lexema+ (char) caracter;
+                valorMT = matriz[estado][columna];
+                if (valorMT < 100) { //cambiar estado
+                    estado = valorMT;
+
+                    if (estado == 0) {
+                        lexema = "";
+                    } else {
+                        lexema = lexema + (char) caracter;
                     }
-                }else if (valorMT >=100 && valorMT < 500) { //estado final
-                    if (valorMT==100) {
+                } else if (valorMT >= 100 && valorMT < 500) { //estado final
+                    if (valorMT == 100) {
                         validarPalabraReservada();
                     }
                     // Valores finales adelantados: 100,101,102,106,123,108,109,116 
-                    if (valorMT==100|| valorMT==101||valorMT==102||valorMT==106||valorMT==123||valorMT==108||valorMT==109||valorMT==116||valorMT>=200 ){
-                        file.seek(file.getFilePointer()-1);
-                    }else{
-                        lexema=lexema+(char)caracter;
+                    if (valorMT == 100 || valorMT == 101 || valorMT == 102 || valorMT == 106 || valorMT == 123 || valorMT == 108 || valorMT == 109 || valorMT == 116 || valorMT >= 200) {
+                        file.seek(file.getFilePointer() - 1);
+                    } else {
+                        lexema = lexema + (char) caracter;
                     }
                     insertarNodo();
-                    estado=0;
-                    lexema="";
+                    estado = 0;
+                    lexema = "";
                 } else { //estado de error
+                    if (valorMT == 501 || valorMT==504) {
+                        imprimirError();
+                        break;
+                    }else{
                     imprimirError();
+                    }
+                    
                 }
 
             }
             if (errorEncontrado) {
-               
-               //   imprimirNodos();
-                Impresion+="Analisis lexico completado con errores ❌❌❌";
-             
-            }else{
-          
-          //  imprimirNodos();
-            Impresion+="Analisis Lexico completado sin errores 😊😊😊";
+
+                //   imprimirNodos();
+                Impresion += "Analisis lexico completado con errores ❌❌❌";
+
+            } else {
+
+                //  imprimirNodos();
+                Impresion += "Analisis Lexico completado sin errores 😊😊😊";
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }finally{
+        } finally {
             try {
-                if (file !=null) {
-                file.close(); 
-            }
+                if (file != null) {
+                    file.close();
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-    
-            
+
         }
     }
-    
-    private void insertarNodo(){
-    nodo nodo=new nodo(lexema,valorMT,numRenglon);
-        if (cabeza==null) {
-            cabeza=nodo;
-            p=cabeza;
+
+    private void insertarNodo() {
+        nodo nodo = new nodo(lexema, valorMT, numRenglon);
+        if (cabeza == null) {
+            cabeza = nodo;
+            p = cabeza;
+        } else {
+            p.sig = nodo;
+            p = nodo;
         }
-        else{
-        p.sig=nodo;
-        p=nodo;
+    }
+
+    private void imprimirNodos() {
+        p = cabeza;
+        while (p != null) {
+            Impresion += (p.lexema + " |  " + p.token + " |  " + p.renglon);
+            Impresion += System.lineSeparator();
+            p = p.sig;
         }
     }
-    
-    private void imprimirNodos(){
-    p=cabeza;
-    while(p!=null){
-      Impresion+= (p.lexema+" |  "+p.token+" |  "+p.renglon);
-      Impresion+=System.lineSeparator();
-        p=p.sig;
-    }
-    }
-    
-    private void validarPalabraReservada(){
+
+    private void validarPalabraReservada() {
         for (String[] palreservada : palabrasReservadas) {
             if (lexema.equals(palreservada[0])) {
-                valorMT= Integer.valueOf(palreservada[1]);            }
+                valorMT = Integer.valueOf(palreservada[1]);
+            }
         }
     }
-    
-    private void imprimirError(){
-        if ((caracter !=-1 && valorMT>=500)) {
+
+    private void imprimirError() {
+        if ((caracter != -1 && valorMT >= 500)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                  Impresion+="El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon;
-                  Impresion+=System.lineSeparator();
+                    Impresion += "El error encontrado es: " + error[0] + ", error " + valorMT + " caracter " + caracter + " en el renglon " + numRenglon;
+                    Impresion += System.lineSeparator();
                 }
             }
-            errorEncontrado=true;
-        }else if ( (caracter ==-1)&& valorMT>=500) {
+            errorEncontrado = true;
+        } else if ((caracter == -1) && (valorMT == 501 || valorMT==504)) {
             for (String[] error : errores) {
                 if (valorMT == Integer.valueOf(error[1])) {
-                    String car=null;
+                    
                     try {
-                        file.seek(file.getFilePointer()-1);
+                        file.seek(file.getFilePointer() - 1);
                         caracter = file.read();
                     } catch (Exception e) {
                     }
-                    Impresion+="El error encontrado es: " +error[0]+", error "+valorMT+" caracter "+caracter+" en el renglon "+numRenglon;
-                    Impresion+=System.lineSeparator();
+                    Impresion += "El error encontrado es: " + error[0] + ", error " + valorMT + " caracter " + caracter + " en el renglon " + numRenglon;
+                    Impresion += System.lineSeparator();
                 }
             }
-            errorEncontrado=true;
+            errorEncontrado = true;
         }
     }
 }
