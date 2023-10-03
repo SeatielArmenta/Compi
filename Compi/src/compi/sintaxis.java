@@ -268,7 +268,11 @@ public class sintaxis {
                         imprimirError(2);
                     }
                     
-                } else{
+                }else if(p.token==122){
+                p=p.sig;
+                } 
+                
+                else{
                     imprimirError(15);
                 }
                 
