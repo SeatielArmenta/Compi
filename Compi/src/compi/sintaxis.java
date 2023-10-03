@@ -10,7 +10,10 @@ package compi;
  * @author seati
  */
 public class sintaxis {
-
+    
+    TablaSimbolos cabezaVariables=null,S;
+    String nombreVariable;
+    String tipo;
    
     String errores[][] = {
         {"Se espera main", "1"},
@@ -47,11 +50,12 @@ public class sintaxis {
                                 p = p.sig;
                                 
                                 variables();
-
+                                
                                 statements();
                                 ciclostatements();
                                 if (p.token == 120) {
                                     System.out.println("Analisis sintactico completado correctamente");
+                                    imprimirListaVariables();
                                     break;
                                 }
                             } else {
@@ -85,6 +89,8 @@ public class sintaxis {
     private void variables() {
         tipos();
         if (p.token == 100) {
+            nombreVariable=p.lexema;
+            insertarNodoVariables();
             p = p.sig;
             ciclovariables();
             
@@ -99,6 +105,7 @@ public class sintaxis {
         if (p.token==207) {
             p=p.sig;
            if (p.token == 209 || p.token == 208 || p.token == 212 || p.token == 213) {
+            tipo=p.lexema;
             p = p.sig;
         } else {
             imprimirError(7);
@@ -115,6 +122,8 @@ public class sintaxis {
         if (p.token == 124) {
             p = p.sig;
             if (p.token == 100) {
+                nombreVariable=p.lexema;
+                insertarNodoVariables();
                 p = p.sig;
                 ciclovariables();
 
@@ -161,7 +170,9 @@ public class sintaxis {
                                     p = p.sig;
                                     statements();
                                     ciclostatements();
+                                    
                                     if (p.token == 120) {
+                                        
                                         p = p.sig;
                                     } else {
                                         imprimirError(5);
@@ -409,6 +420,27 @@ public class sintaxis {
                 System.out.println(error[0]);
                 
             }
+        }
+    }
+    
+    private void insertarNodoVariables() {
+        TablaSimbolos tablasimbolos=new TablaSimbolos(p.renglon, tipo, nombreVariable);
+        System.out.println("new variable "+p.renglon +tipo +nombreVariable);
+        if (cabezaVariables==null) {
+            cabezaVariables=tablasimbolos;
+            S=cabezaVariables;
+        }else{
+            S.siguiente=tablasimbolos;
+            S=tablasimbolos;
+        }
+        
+    }
+    
+    private void imprimirListaVariables(){
+        S=cabezaVariables;
+        while(S !=null){
+            System.out.println("num linea :"+S.numLinea +" tipo: "+S.tipo+" nombre variable: "+S.nombre);
+            S=S.siguiente;
         }
     }
 

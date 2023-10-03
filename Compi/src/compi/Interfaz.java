@@ -23,6 +23,7 @@ import javax.swing.table.TableModel;
  */
 public class Interfaz extends javax.swing.JFrame {
   lexico Lex;
+  sintaxis sintx;
   String arch;
   File file;
   
@@ -193,6 +194,8 @@ public class Interfaz extends javax.swing.JFrame {
         
        
          Lex=new lexico(arch);
+         
+         sintx = new sintaxis(Lex.cabeza);
          
          jTextArea2.setText(Lex.Impresion);
          RecorrerNodos(Lex.cabeza);
