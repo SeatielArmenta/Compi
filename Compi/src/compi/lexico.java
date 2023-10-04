@@ -31,7 +31,7 @@ public class lexico {
                    /* 14 */{  14,      14,     14,    14,     14,      14,     14,     14,     14,     14,       14,     14,      14,      14,     14,      14,      14,     14,    14,     14,     14,  122,    14,     14,   504,      14,    504,   14,   504}
           
       };
-    String palabrasReservadas[][] = {
+    public String[][] palabrasReservadas = {
         {"break", "200"},
         {"if", "201"},
         {"else", "202"},
@@ -274,5 +274,11 @@ public class lexico {
             }
             errorEncontrado = true;
         }
+    }
+    
+    public String[][] enviarArray(){
+        String[][] arreglo=palabrasReservadas;
+        System.out.println(arreglo[0][0]);
+        return arreglo;
     }
 }
