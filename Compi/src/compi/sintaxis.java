@@ -13,16 +13,20 @@ import java.util.List;
  * @author seati
  */
 public class sintaxis {
-    
+
     TablaSimbolos cabezaVariables = null, S;
     String nombreVariable;
     String tipo;
+    String impresion="";
     lexico RefLexico;
-    
+    int renglonError;
+    boolean primerVariable = true;
+    boolean errorsemantico = false;
+
     List<String> nombresVistos = new ArrayList<>();
-    
+
     String[][] palabras;
-    
+
     String errores[][] = {
         {"Se espera main", "1"},
         {"Se espera (", "2"},
@@ -39,16 +43,19 @@ public class sintaxis {
         {"Se espera factor", "13"},
         {"Se espera operador multiplicativo", "14"},
         {"Se espera valor o entrada de teclado", "15"},
-        {"Se espera new", "16"},
-        {"Variable no creada", "17"}
-    
+        {"Se espera new", "16"}
     };
     
+    String errorSemantico[][] = {
+        {"Variable no creada", "1"},
+        {"Variable repetida", "2"}
+    };
+
     public String[] palabrasReservadas = {"int", "string", "boolean", "float"};
     nodo p = null;
-    
+
     public sintaxis(nodo n) {
-        
+
         try {
             p = n;
             while (p != null) {
@@ -60,15 +67,14 @@ public class sintaxis {
                             p = p.sig;
                             if (p.token == 119) {
                                 p = p.sig;
-                                
+
                                 variables();
-                                comprobacionDeVariables();
                                 statements();
                                 ciclostatements();
                                 if (p.token == 120) {
-                                    System.out.println("Analisis sintactico completado correctamente");
+                                    impresion+=("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
                                     imprimirListaVariables();
-                                    
+
                                     break;
                                 }
                             } else {
@@ -82,37 +88,40 @@ public class sintaxis {
                     }
                 } else {
                     imprimirError(1);
-                    
+
                 }
-                
+
             }
-            
+
         } catch (NullPointerException e) {
             imprimirError(5);
         }
     }
-    
+
     private void ciclostatements() {
+
         if (p.token != 120) {
+
             statements();
             ciclostatements();
         }
     }
-    
+
     private void variables() {
         tipos();
         if (p.token == 100) {
             nombreVariable = p.lexema;
             insertarNodoVariables();
+            
             p = p.sig;
             ciclovariables();
-            
+
         } else {
             imprimirError(6);
-            
+
         }
     }
-    
+
     private void tipos() {
         if (p.token == 207) {
             p = p.sig;
@@ -121,41 +130,44 @@ public class sintaxis {
                 p = p.sig;
             } else {
                 imprimirError(7);
-                
-            }            
+
+            }
         } else {
             imprimirError(16);
         }
-        
+
     }
-    
+
     private void ciclovariables() {
         if (p.token == 124) {
             p = p.sig;
             if (p.token == 100) {
                 nombreVariable = p.lexema;
                 insertarNodoVariables();
-                p = p.sig;
+                if (errorsemantico = true) {
+                    p = p.sig;
+                }
+
                 ciclovariables();
-                
+
             } else {
                 imprimirError(6);
-                
+
             }
-            
+
         } else if (p.token == 125) {
             p = p.sig;
             if (p.token == 207) {
                 variables();
             }
-            
+
         } else {
-            
+
             imprimirError(8);
         }
-        
+
     }
-    
+
     private void statements() {
         if (p.token == 201) {
             p = p.sig;
@@ -166,23 +178,23 @@ public class sintaxis {
                     p = p.sig;
                     if (p.token == 119) {
                         p = p.sig;
-                        
+
                         statements();
                         ciclostatements();
-                        
+
                         if (p.token == 120) {
-                            
+
                             p = p.sig;
-                            
+
                             if (p.token == 202) {
                                 p = p.sig;
                                 if (p.token == 119) {
                                     p = p.sig;
                                     statements();
                                     ciclostatements();
-                                    
+
                                     if (p.token == 120) {
-                                        
+
                                         p = p.sig;
                                     } else {
                                         imprimirError(5);
@@ -229,7 +241,7 @@ public class sintaxis {
             } else {
                 imprimirError(2);
             }
-            
+
         } //Funcion de imprimir
         else if (p.token == 206) {
             p = p.sig;
@@ -247,22 +259,22 @@ public class sintaxis {
                                 imprimirError(8);
                             }
                         } else {
-                            
+
                             imprimirError(3);
                         }
                     } else {
                         //error de variable
-                        imprimirError(17);
+                        impSemantico(1);
                     }
-                    
+
                 } else {
                     imprimirError(6);
                 }
-                
+
             } else {
                 imprimirError(2);
             }
-            
+
         } //Evaluacion de variable
         else if (p.token == 100) {
             if (existeVariable(p)) {
@@ -270,16 +282,19 @@ public class sintaxis {
                 if (p.token == 123) {
                     p = p.sig;
                     if (p.token == 100 || p.token == 101 || p.token == 102 || p.token == 117 || p.token == 116 || p.token == 104 || p.token == 103) {
-                        if (p.token==100) {
-                        if (existeVariable(p)) {
+                        if (p.token == 100) {
+                            if (existeVariable(p)) {
+                                exp_sim();
+                            } else {
+                                impSemantico(1);
+                                if (errorsemantico) {
+                                    p=p.sig;
+                                }
+                            }
+                        } else {
                             exp_sim();
-                        }else{
-                            imprimirError(17);
                         }
-                    }else{
-                        exp_sim();
-                    }
-                        
+
                     } else if (p.token == 214) {
                         p = p.sig;
                         if (p.token == 117) {
@@ -292,16 +307,16 @@ public class sintaxis {
                         } else {
                             imprimirError(2);
                         }
-                        
+
                     } else if (p.token == 122) {
                         p = p.sig;
                     } else {
                         imprimirError(15);
                     }
-                    
+
                     if (p.token == 125) {
                         p = p.sig;
-                        
+
                     } else {
                         imprimirError(8);
                     }
@@ -309,44 +324,48 @@ public class sintaxis {
                     imprimirError(9);
                 }
             } else {
-                imprimirError(17);
+                impSemantico(1);
+                while (renglonError == p.renglon) {
+                    p = p.sig;
+                }
+
             }
-            
+
         } else if (p.token == 120) {
-            
+
         } else {
             imprimirError(10);
         }
-        
+
     }
-    
+
     private void exp_cond() {
         exp_sim();
-        
+
         exp_rel();
         exp_sim();
-        
+
     }
-    
+
     private void cicloimpresion() {
         if (p.token == 124) {
             p = p.sig;
             if (p.token == 100) {
                 if (existeVariable(p)) {
                     p = p.sig;
-                if (p.token == 124) {
-                    cicloimpresion();
+                    if (p.token == 124) {
+                        cicloimpresion();
+                    }
+                } else {
+                    impSemantico(1);
                 }
-                }else{
-                    imprimirError(17);
-                }
-                
+
             } else {
                 imprimirError(6);
             }
         }
     }
-    
+
     private void exp_rel() {
         if (p.token == 108) {
             p = p.sig;
@@ -361,24 +380,24 @@ public class sintaxis {
         } else if (p.token == 113) {
             p = p.sig;
         } else {
-            
+
             imprimirError(11);
         }
     }
-    
+
     private void exp_sim() {
-        
+
         termino();
-        
+
         if (p.token == 103 || p.token == 104 || p.token == 115) {
-            
+
             op_aditivo();
-            
+
             exp_sim();
         }
-        
+
     }
-    
+
     private void op_aditivo() {
         if (p.token == 103) {
             p = p.sig;
@@ -390,33 +409,33 @@ public class sintaxis {
             imprimirError(12);
         }
     }
-    
+
     private void signo() {
         if (p.token == 103) {
             p = p.sig;
         } else if (p.token == 104) {
             p = p.sig;
-            
+
         }
     }
-    
+
     private void termino() {
         factor();
         if (p.token == 105 || p.token == 106 || p.token == 114) {
             op_mult();
             termino();
         }
-        
+
     }
-    
+
     private void factor() {
         if (p.token == 100) {
             if (existeVariable(p)) {
                 p = p.sig;
-            }else{
-                imprimirError(17);
+            } else {
+                impSemantico(1);
             }
-            
+
         } else if (p.token == 116) {
             p = p.sig;
             factor();
@@ -439,7 +458,7 @@ public class sintaxis {
             imprimirError(13);
         }
     }
-    
+
     private void op_mult() {
         if (p.token == 105) {
             p = p.sig;
@@ -450,33 +469,50 @@ public class sintaxis {
         } else {
             imprimirError(14);
         }
-        
+
     }
-    
+
     private void imprimirError(int nerror) {
         for (String[] error : errores) {
             if (nerror == Integer.valueOf(error[1])) {
-                
-                System.out.println(error[0]);
+                impresion+=(error[0]);
                 p = p.sig;
-                
             }
         }
     }
-    
-    private void insertarNodoVariables() {
-        TablaSimbolos tablasimbolos = new TablaSimbolos(p.renglon, tipo, nombreVariable);
-        System.out.println("new variable " + p.renglon + tipo + nombreVariable);
-        if (cabezaVariables == null) {
-            cabezaVariables = tablasimbolos;
-            S = cabezaVariables;
-        } else {
-            S.siguiente = tablasimbolos;
-            S = tablasimbolos;
+
+    private void impSemantico(int nerror) {
+        for (String[] error : errorSemantico) {
+            if (nerror == Integer.valueOf(error[1])) {
+                renglonError = p.renglon;
+                impresion+=(error[0]);
+                errorsemantico = true;
+            }
         }
-        
+
     }
-    
+
+    private void insertarNodoVariables() {
+        errorsemantico = false;
+        if (primerVariable) {
+            TablaSimbolos tablasimbolos = new TablaSimbolos(p.renglon, tipo, nombreVariable);
+            cabezaVariables = tablasimbolos;
+            S = tablasimbolos;
+            nombresVistos.add(S.nombre);
+            primerVariable = false;
+        } else {
+            if (existeVariable(p)) {
+                impSemantico(2);
+            } else {
+                TablaSimbolos tablasimbolos = new TablaSimbolos(p.renglon, tipo, nombreVariable);
+                
+                S.siguiente = tablasimbolos;
+                S = tablasimbolos;
+                nombresVistos.add(S.nombre);
+            }
+        }
+    }
+
     private void imprimirListaVariables() {
         S = cabezaVariables;
         while (S != null) {
@@ -484,28 +520,11 @@ public class sintaxis {
             S = S.siguiente;
         }
     }
+
     
-    private void comprobacionDeVariables() {
-        
-        boolean error = false;
-        S = cabezaVariables;
-        while (S != null) {
-            error = false;
-            if (nombresVistos.contains(S.nombre)) {
-                System.out.println("ERROR Variable con nombre: " + S.nombre + " ya declarada");                
-                error = true;
-                break;
-            }
-            
-            if (error == false) {
-                nombresVistos.add(S.nombre);
-            }
-            S = S.siguiente;
-        }        
-    }
-    
+
     private boolean existeVariable(nodo P) {
         return nombresVistos.contains(P.lexema);
     }
-    
+
 }
