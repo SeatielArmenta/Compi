@@ -270,6 +270,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
         jTable1.setModel(tableModel);
     }
+    
     private void RecorrerVariables(TablaSimbolos cabeza){
     TablaSimbolos p=cabeza;
          DefaultTableModel tableModel = new DefaultTableModel();
@@ -278,7 +279,7 @@ public class Interfaz extends javax.swing.JFrame {
         tableModel.addColumn("Nombre");
         tableModel.addColumn("Valor");
         while (p!=null) {            
-         tableModel.addRow(new Object[]{String.valueOf(p.numLinea),String.valueOf(p.tipo),String.valueOf(p.nombre)});
+         tableModel.addRow(new Object[]{String.valueOf(p.numLinea),String.valueOf(p.tipo),String.valueOf(p.nombre),String.valueOf(p.valor)});
          p=p.siguiente;
         }
         jTable2.setModel(tableModel);

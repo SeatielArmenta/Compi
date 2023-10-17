@@ -9,8 +9,11 @@ public class sintaxis {
     String nombreVariable;
     String tipo;
     String impresion = "";
+    String evaluada = "";
+    String valorTemp;
     lexico RefLexico;
     int renglonError;
+    boolean evDirecta = true;
     boolean primerVariable = true;
     boolean errorsemantico = false;
     boolean evaluacionVariable = false;
@@ -22,7 +25,7 @@ public class sintaxis {
 
     String longitud[][] = {
         {"int", "4"},
-        {"string", "100"},
+        {"string", "101"},
         {"float", "7"}
     };
 
@@ -72,6 +75,7 @@ public class sintaxis {
                                 variables();
                                 statements();
                                 limpiarComprobar();
+                                asignarValor();
                                 ciclostatements();
                                 if (p.token == 120) {
                                     impresion += ("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
@@ -106,6 +110,7 @@ public class sintaxis {
 
             statements();
             limpiarComprobar();
+            asignarValor();
             ciclostatements();
         }
     }
@@ -294,9 +299,11 @@ public class sintaxis {
 
         } //Evaluacion de variable
         else if (p.token == 100) {
+            evDirecta = true;
             evaluacionVariable = true;
             if (existeVariable(p)) {
                 insertarTipo(p);
+                evaluada = p.lexema;
                 p = p.sig;
                 if (p.token == 123) {
                     p = p.sig;
@@ -328,10 +335,12 @@ public class sintaxis {
                         }
 
                     } else if (p.token == 122) {
+                        agregarValor(p);
                         tipos.add("string");
                         p = p.sig;
 
                     } else if (p.token == 210 || p.token == 211) {
+                        agregarValor(p);
                         tipos.add("boolean");
                         p = p.sig;
 
@@ -358,7 +367,7 @@ public class sintaxis {
             }
 
         } else if (p.token == 120) {
-            System.out.println("xdd");
+
         } else {
             imprimirError(10);
         }
@@ -417,6 +426,7 @@ public class sintaxis {
         termino();
 
         if (p.token == 103 || p.token == 104 || p.token == 115) {
+            evDirecta = false;
 
             op_aditivo();
 
@@ -457,6 +467,9 @@ public class sintaxis {
 
     private void factor() {
         if (p.token == 100) {
+            if (evaluacionVariable) {
+                agregarValor(p);
+            }
             if (existeVariable(p)) {
                 insertarTipo(p);
                 p = p.sig;
@@ -470,9 +483,11 @@ public class sintaxis {
             p = p.sig;
             factor();
         } else if (p.token == 101) {
+            agregarValor(p);
             p = p.sig;
             tipos.add("int");
         } else if (p.token == 102) {
+            agregarValor(p);
             p = p.sig;
             tipos.add("float");
         } else if (p.token == 117) {
@@ -550,7 +565,7 @@ public class sintaxis {
     private void imprimirListaVariables() {
         S = cabezaVariables;
         while (S != null) {
-            System.out.println("num linea :" + S.numLinea + " tipo: " + S.tipo + " nombre variable: " + S.nombre);
+            System.out.println("num linea :" + S.numLinea + " tipo: " + S.tipo + " nombre variable: " + S.nombre + " con valor " + S.valor);
             S = S.siguiente;
         }
     }
@@ -612,7 +627,48 @@ public class sintaxis {
 
     }
 
-    private void comprobarLongitud() {
+    private void agregarValor(nodo p) {
+        valorTemp = p.lexema;
+    }
 
+    private void asignarValor() {
+        if (evDirecta) {
+            TablaSimbolos s;
+            s = cabezaVariables;
+            do {
+                if (s.nombre.equals(evaluada)) {
+                    if (comprobarLongitud(s)) {
+                        s.valor = valorTemp;
+                        break;
+                    } else {
+                        impSemantico(4);
+                        break;
+                    }
+
+                } else {
+                    s = s.siguiente;
+                }
+            } while (s != null);
+        }
+
+    }
+
+    private boolean comprobarLongitud(TablaSimbolos s) {
+        boolean estado = false;
+        for (String[] tipoLongitud : longitud) {
+            if (s.tipo.equals(tipoLongitud[0])) {
+                int longitudMaxima = Integer.parseInt(tipoLongitud[1]);
+                if (valorTemp.length() <= longitudMaxima) {
+                    estado = true;
+                    break;
+                } else {
+                    estado = false;
+                }
+
+            } else {
+                estado = false;
+            }
+        }
+        return estado;
     }
 }
