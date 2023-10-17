@@ -1,31 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package compi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author seati
- */
 public class sintaxis {
 
     TablaSimbolos cabezaVariables = null, S;
     String nombreVariable;
     String tipo;
-    String impresion="";
+    String impresion = "";
     lexico RefLexico;
     int renglonError;
     boolean primerVariable = true;
     boolean errorsemantico = false;
+    boolean evaluacionVariable = false;
+    ArrayList<String> tipos = new ArrayList<String>();
 
     List<String> nombresVistos = new ArrayList<>();
 
     String[][] palabras;
+
+    String longitud[][] = {
+        {"int", "4"},
+        {"string", "100"},
+        {"float", "7"}
+    };
 
     String errores[][] = {
         {"Se espera main", "1"},
@@ -45,10 +44,12 @@ public class sintaxis {
         {"Se espera valor o entrada de teclado", "15"},
         {"Se espera new", "16"}
     };
-    
+
     String errorSemantico[][] = {
         {"Variable no creada", "1"},
-        {"Variable repetida", "2"}
+        {"Variable repetida", "2"},
+        {"Incompatibilidad de tipos", "3"},
+        {"Valor excedente", "4"}
     };
 
     public String[] palabrasReservadas = {"int", "string", "boolean", "float"};
@@ -70,9 +71,10 @@ public class sintaxis {
 
                                 variables();
                                 statements();
+                                limpiarComprobar();
                                 ciclostatements();
                                 if (p.token == 120) {
-                                    impresion+=("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
+                                    impresion += ("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
                                     imprimirListaVariables();
 
                                     break;
@@ -103,8 +105,17 @@ public class sintaxis {
         if (p.token != 120) {
 
             statements();
+            limpiarComprobar();
             ciclostatements();
         }
+    }
+
+    private void limpiarComprobar() {
+        if (evaluacionVariable) {
+            comprobarCompatibilidad();
+            evaluacionVariable = false;
+        }
+        tipos.clear();
     }
 
     private void variables() {
@@ -112,7 +123,7 @@ public class sintaxis {
         if (p.token == 100) {
             nombreVariable = p.lexema;
             insertarNodoVariables();
-            
+
             p = p.sig;
             ciclovariables();
 
@@ -174,6 +185,8 @@ public class sintaxis {
             if (p.token == 117) {
                 p = p.sig;
                 exp_cond();
+                comprobarCompatibilidad();
+                tipos.clear();
                 if (p.token == 118) {
                     p = p.sig;
                     if (p.token == 119) {
@@ -221,6 +234,8 @@ public class sintaxis {
             if (p.token == 117) {
                 p = p.sig;
                 exp_cond();
+                comprobarCompatibilidad();
+                tipos.clear();
                 if (p.token == 118) {
                     p = p.sig;
                     if (p.token == 119) {
@@ -249,6 +264,7 @@ public class sintaxis {
                 p = p.sig;
                 if (p.token == 100) {
                     if (existeVariable(p)) {
+                        comprobarImpresion(p);
                         p = p.sig;
                         cicloimpresion();
                         if (p.token == 118) {
@@ -265,19 +281,22 @@ public class sintaxis {
                     } else {
                         //error de variable
                         impSemantico(1);
+                        while (renglonError == p.renglon) {
+                            p = p.sig;
+                        }
                     }
-
                 } else {
                     imprimirError(6);
                 }
-
             } else {
                 imprimirError(2);
             }
 
         } //Evaluacion de variable
         else if (p.token == 100) {
+            evaluacionVariable = true;
             if (existeVariable(p)) {
+                insertarTipo(p);
                 p = p.sig;
                 if (p.token == 123) {
                     p = p.sig;
@@ -288,7 +307,7 @@ public class sintaxis {
                             } else {
                                 impSemantico(1);
                                 if (errorsemantico) {
-                                    p=p.sig;
+                                    p = p.sig;
                                 }
                             }
                         } else {
@@ -309,7 +328,13 @@ public class sintaxis {
                         }
 
                     } else if (p.token == 122) {
+                        tipos.add("string");
                         p = p.sig;
+
+                    } else if (p.token == 210 || p.token == 211) {
+                        tipos.add("boolean");
+                        p = p.sig;
+
                     } else {
                         imprimirError(15);
                     }
@@ -328,11 +353,12 @@ public class sintaxis {
                 while (renglonError == p.renglon) {
                     p = p.sig;
                 }
+                evaluacionVariable = false;
 
             }
 
         } else if (p.token == 120) {
-
+            System.out.println("xdd");
         } else {
             imprimirError(10);
         }
@@ -358,6 +384,7 @@ public class sintaxis {
                     }
                 } else {
                     impSemantico(1);
+                    p = p.sig;
                 }
 
             } else {
@@ -431,9 +458,12 @@ public class sintaxis {
     private void factor() {
         if (p.token == 100) {
             if (existeVariable(p)) {
+                insertarTipo(p);
                 p = p.sig;
             } else {
                 impSemantico(1);
+                p = p.sig;
+
             }
 
         } else if (p.token == 116) {
@@ -441,8 +471,10 @@ public class sintaxis {
             factor();
         } else if (p.token == 101) {
             p = p.sig;
+            tipos.add("int");
         } else if (p.token == 102) {
             p = p.sig;
+            tipos.add("float");
         } else if (p.token == 117) {
             p = p.sig;
             exp_sim();
@@ -475,7 +507,8 @@ public class sintaxis {
     private void imprimirError(int nerror) {
         for (String[] error : errores) {
             if (nerror == Integer.valueOf(error[1])) {
-                impresion+=(error[0]);
+                impresion += (error[0]);
+                impresion += "\n";
                 p = p.sig;
             }
         }
@@ -485,7 +518,8 @@ public class sintaxis {
         for (String[] error : errorSemantico) {
             if (nerror == Integer.valueOf(error[1])) {
                 renglonError = p.renglon;
-                impresion+=(error[0]);
+                impresion += (error[0]);
+                impresion += "\n";
                 errorsemantico = true;
             }
         }
@@ -505,7 +539,7 @@ public class sintaxis {
                 impSemantico(2);
             } else {
                 TablaSimbolos tablasimbolos = new TablaSimbolos(p.renglon, tipo, nombreVariable);
-                
+
                 S.siguiente = tablasimbolos;
                 S = tablasimbolos;
                 nombresVistos.add(S.nombre);
@@ -521,10 +555,64 @@ public class sintaxis {
         }
     }
 
-    
-
     private boolean existeVariable(nodo P) {
         return nombresVistos.contains(P.lexema);
     }
 
+    private void insertarTipo(nodo variable) {
+        TablaSimbolos s;
+        s = cabezaVariables;
+        do {
+            if (s.nombre.equals(variable.lexema)) {
+                tipos.add(s.tipo);
+                break;
+            } else {
+                s = s.siguiente;
+            }
+        } while (s != null);
+    }
+
+    private void comprobarCompatibilidad() {
+        boolean correcto = true;
+        String tipo = tipos.get(0);
+        for (String elemento : tipos) {
+            if (!elemento.equals(tipo)) {
+                System.out.println(elemento);
+                correcto = false;
+                break;
+            }
+        }
+
+        if (correcto) {
+            System.out.println("ok");
+        } else {
+            impSemantico(3);
+            System.out.println("Error pibe");
+        }
+
+    }
+
+    private void comprobarImpresion(nodo p) {
+        TablaSimbolos s;
+        s = cabezaVariables;
+        do {
+            if (s.nombre.equals(p.lexema)) {
+                if (s.tipo.equals("string")) {
+                    System.out.println("Se puede imprimir");
+                    break;
+                } else {
+                    impresion += "Error de impresion: ";
+                    impSemantico(3);
+                    break;
+                }
+            } else {
+                s = s.siguiente;
+            }
+        } while (s != null);
+
+    }
+
+    private void comprobarLongitud() {
+
+    }
 }

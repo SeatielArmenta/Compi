@@ -13,6 +13,7 @@ public class TablaSimbolos {
     int numLinea;
     String tipo;
     String nombre;
+    String valor="";
     TablaSimbolos siguiente=null;
 
     public TablaSimbolos(int numLinea, String tipo, String nombre) {
