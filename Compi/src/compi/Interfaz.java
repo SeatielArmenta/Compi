@@ -6,8 +6,7 @@
 package compi;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.FileWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -16,6 +15,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+
+import java.nio.file.Files;
+
+
 
 /**
  *
@@ -31,8 +38,11 @@ public class Interfaz extends javax.swing.JFrame {
      * Creates new form Interfaz
      */
     public Interfaz() {
-        initComponents();
-      
+        
+       
+         initComponents();
+        setTitle("Compilador");
+
     }
 
     /**
@@ -44,7 +54,7 @@ public class Interfaz extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
@@ -58,20 +68,74 @@ public class Interfaz extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        btnNuevo1 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnEjecutar = new javax.swing.JButton();
+        SemanticoLabel = new javax.swing.JLabel();
+        SemanticoStatusLabel = new javax.swing.JLabel();
+        LexicoLabel = new javax.swing.JLabel();
+        LexicoStatusLabel = new javax.swing.JLabel();
+        SintaxisLabel1 = new javax.swing.JLabel();
+        SintaxisStatusLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("Examinar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscar.setText("Examinar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jTextArea1.setName("AreaCodigo"); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
+        jTextArea1.setFont(new Font("Monospaced",Font.PLAIN,12));
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.add(jScrollPane1, BorderLayout.CENTER);
+
+        JTextArea lineNumbers = new JTextArea("1");
+        lineNumbers.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        lineNumbers.setBackground(Color.LIGHT_GRAY);
+        lineNumbers.setEditable(false);
+        jScrollPane1.setRowHeaderView(lineNumbers);
+
+        jTextArea1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLineNumbers();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLineNumbers();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLineNumbers();
+            }
+
+            private void updateLineNumbers() {
+                SwingUtilities.invokeLater(() -> {
+                    int lineCount = jTextArea1.getLineCount();
+                    StringBuilder numbersText = new StringBuilder();
+                    for (int i = 1; i <= lineCount; i++) {
+                        if (i > 1) {
+                            numbersText.append("\n");
+                        }
+                        numbersText.append(i);
+                    }
+                    lineNumbers.setText(numbersText.toString());
+                });
+            }
+        });
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 63, 650, 291));
 
         jButton2.setText("Compilar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -79,14 +143,18 @@ public class Interfaz extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
 
         jLabel1.setText("Archivo");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 50, 45));
 
         jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 652, 276));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -111,7 +179,10 @@ public class Interfaz extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
         }
 
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(754, 56, 305, 628));
+
         jLabel2.setText("Output");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, -1, -1));
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -136,76 +207,51 @@ public class Interfaz extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(2).setResizable(false);
         }
 
+        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1126, 56, 509, 628));
+
         jLabel3.setText("Lista de lexemas");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(754, 35, -1, -1));
 
         jLabel4.setText("Lista de variables");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1126, 35, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(90, 90, 90)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(67, 67, 67)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 20, Short.MAX_VALUE)
-                                .addComponent(jButton1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(17, 17, 17)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(57, 57, 57))
-        );
+        btnNuevo1.setText("Nuevo");
+        getContentPane().add(btnNuevo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, -1, -1));
+
+        btnGuardar.setText("Guardar");
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 20, -1, -1));
+
+        btnEjecutar.setText("Ejecutar");
+        getContentPane().add(btnEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 20, -1, -1));
+
+        SemanticoLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        SemanticoLabel.setText("3)Semantico");
+        getContentPane().add(SemanticoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 390, -1, -1));
+
+        SemanticoStatusLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        SemanticoStatusLabel.setText("-----------");
+        getContentPane().add(SemanticoStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 390, -1, -1));
+
+        LexicoLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        LexicoLabel.setText("1)Lexico");
+        getContentPane().add(LexicoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, -1, -1));
+
+        LexicoStatusLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        LexicoStatusLabel.setText("-----------");
+        getContentPane().add(LexicoStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 390, -1, -1));
+
+        SintaxisLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        SintaxisLabel1.setText("2)Sintaxis");
+        getContentPane().add(SintaxisLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, -1, -1));
+
+        SintaxisStatusLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        SintaxisStatusLabel1.setText("-----------");
+        getContentPane().add(SintaxisStatusLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 390, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "TXT Files", "txt");
@@ -216,8 +262,9 @@ public class Interfaz extends javax.swing.JFrame {
             file=chooser.getSelectedFile();
             arch=chooser.getSelectedFile().getAbsolutePath();
             try {
-            
-            jTextArea1.read(new BufferedReader(new FileReader(arch)), null);
+            String contenido = new String(Files.readAllBytes(file.toPath()));
+            jTextArea1.setText(contenido);
+            //jTextArea1.read(new BufferedReader(new FileReader(arch)), null);
             
 
         } catch (Exception e){
@@ -230,8 +277,9 @@ public class Interfaz extends javax.swing.JFrame {
     //Path
        
               
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
+    
     private void Archivo(){
      try{
            PrintWriter writer = new PrintWriter(file);
@@ -244,8 +292,22 @@ public class Interfaz extends javax.swing.JFrame {
         
        
          Lex=new lexico(arch);
-         
+         if (Lex.errorEncontrado) {
+             LexicoStatusLabel.setText("❌❌❌❌❌");
+         }else{
+             LexicoStatusLabel.setText("✅✅✅✅✅");
+         }
          sintx = new sintaxis(Lex.cabeza);
+         if (sintx.errorSintactico) {
+             SintaxisStatusLabel1.setText("❌❌❌❌❌");
+         }else{
+             SintaxisStatusLabel1.setText("✅✅✅✅✅");
+         }
+         if (sintx.errorsemantico) {
+             SemanticoStatusLabel.setText("❌❌❌❌❌");
+         }else{
+             SemanticoStatusLabel.setText("✅✅✅✅✅");
+         }
          
          jTextArea2.setText(Lex.Impresion);
          
@@ -317,17 +379,29 @@ public class Interfaz extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Interfaz().setVisible(true);
             }
         });
+        
+        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel LexicoLabel;
+    private javax.swing.JLabel LexicoStatusLabel;
+    private javax.swing.JLabel SemanticoLabel;
+    private javax.swing.JLabel SemanticoStatusLabel;
+    private javax.swing.JLabel SintaxisLabel1;
+    private javax.swing.JLabel SintaxisStatusLabel1;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEjecutar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnNuevo1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

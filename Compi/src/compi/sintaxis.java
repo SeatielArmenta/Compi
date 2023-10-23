@@ -16,6 +16,7 @@ public class sintaxis {
     boolean evDirecta = true;
     boolean primerVariable = true;
     boolean errorsemantico = false;
+    boolean errorSintactico =false;
     boolean evaluacionVariable = false;
     ArrayList<String> tipos = new ArrayList<String>();
 
@@ -524,6 +525,7 @@ public class sintaxis {
             if (nerror == Integer.valueOf(error[1])) {
                 impresion += (error[0]);
                 impresion += "\n";
+                errorSintactico=true;
                 p = p.sig;
             }
         }
