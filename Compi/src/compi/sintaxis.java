@@ -25,9 +25,10 @@ public class sintaxis {
     String[][] palabras;
 
     String longitud[][] = {
-        {"int", "4"},
+        {"int", "7"},
         {"string", "101"},
-        {"float", "7"}
+        {"float", "7"},
+        {"boolean","5"}
     };
 
     String errores[][] = {
@@ -75,8 +76,7 @@ public class sintaxis {
 
                                 variables();
                                 statements();
-                                limpiarComprobar();
-                                asignarValor();
+                                
                                 ciclostatements();
                                 if (p.token == 120) {
                                     impresion += ("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
@@ -110,8 +110,7 @@ public class sintaxis {
         if (p.token != 120) {
 
             statements();
-            limpiarComprobar();
-            asignarValor();
+            
             ciclostatements();
         }
     }
@@ -350,6 +349,8 @@ public class sintaxis {
                     }
 
                     if (p.token == 125) {
+                        limpiarComprobar();
+                        asignarValor();
                         p = p.sig;
 
                     } else {
@@ -591,9 +592,9 @@ public class sintaxis {
 
     private void comprobarCompatibilidad() {
         boolean correcto = true;
-        String tipo = tipos.get(0);
+        String tipovar = tipos.get(0);
         for (String elemento : tipos) {
-            if (!elemento.equals(tipo)) {
+            if (!elemento.equals(tipovar)) {
                 System.out.println(elemento);
                 correcto = false;
                 break;
