@@ -79,7 +79,6 @@ public class Interfaz extends javax.swing.JFrame {
         SintaxisStatusLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnBuscar.setText("Examinar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -87,7 +86,6 @@ public class Interfaz extends javax.swing.JFrame {
                 btnBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -135,26 +133,20 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 63, 650, 291));
-
         jButton2.setText("Compilar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, -1, -1));
 
         jLabel1.setText("Archivo");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 50, 45));
 
         jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
-
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 652, 276));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -179,10 +171,7 @@ public class Interfaz extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(754, 56, 305, 628));
-
         jLabel2.setText("Output");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, -1, -1));
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -207,46 +196,119 @@ public class Interfaz extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1126, 56, 509, 628));
-
         jLabel3.setText("Lista de lexemas");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(754, 35, -1, -1));
 
         jLabel4.setText("Lista de variables");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1126, 35, -1, -1));
 
         btnNuevo1.setText("Nuevo");
-        getContentPane().add(btnNuevo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, -1, -1));
 
         btnGuardar.setText("Guardar");
-        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 20, -1, -1));
 
         btnEjecutar.setText("Ejecutar");
-        getContentPane().add(btnEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 20, -1, -1));
 
         SemanticoLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         SemanticoLabel.setText("3)Semantico");
-        getContentPane().add(SemanticoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 390, -1, -1));
 
         SemanticoStatusLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         SemanticoStatusLabel.setText("-----------");
-        getContentPane().add(SemanticoStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 390, -1, -1));
 
         LexicoLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         LexicoLabel.setText("1)Lexico");
-        getContentPane().add(LexicoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, -1, -1));
 
         LexicoStatusLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         LexicoStatusLabel.setText("-----------");
-        getContentPane().add(LexicoStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 390, -1, -1));
 
         SintaxisLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         SintaxisLabel1.setText("2)Sintaxis");
-        getContentPane().add(SintaxisLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, -1, -1));
 
         SintaxisStatusLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         SintaxisStatusLabel1.setText("-----------");
-        getContentPane().add(SintaxisStatusLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 390, -1, -1));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(LexicoLabel)
+                        .addGap(13, 13, 13)
+                        .addComponent(LexicoStatusLabel)
+                        .addGap(24, 24, 24)
+                        .addComponent(SintaxisLabel1)
+                        .addGap(12, 12, 12)
+                        .addComponent(SintaxisStatusLabel1)
+                        .addGap(44, 44, 44)
+                        .addComponent(SemanticoLabel)
+                        .addGap(10, 10, 10)
+                        .addComponent(SemanticoStatusLabel))
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)
+                                .addComponent(btnNuevo1)
+                                .addGap(15, 15, 15)
+                                .addComponent(btnBuscar)
+                                .addGap(22, 22, 22)
+                                .addComponent(btnGuardar)
+                                .addGap(16, 16, 16)
+                                .addComponent(jButton2)
+                                .addGap(175, 175, 175)
+                                .addComponent(btnEjecutar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(97, 97, 97)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(67, 67, 67)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnNuevo1)
+                            .addComponent(btnBuscar)
+                            .addComponent(btnGuardar)
+                            .addComponent(jButton2)
+                            .addComponent(btnEjecutar))))
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LexicoLabel)
+                    .addComponent(LexicoStatusLabel)
+                    .addComponent(SintaxisLabel1)
+                    .addComponent(SintaxisStatusLabel1)
+                    .addComponent(SemanticoLabel)
+                    .addComponent(SemanticoStatusLabel))
+                .addGap(26, 26, 26)
+                .addComponent(jLabel2)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel3)
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel4)
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

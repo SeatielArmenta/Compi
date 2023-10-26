@@ -160,9 +160,9 @@ public class sintaxis {
             if (p.token == 100) {
                 nombreVariable = p.lexema;
                 insertarNodoVariables();
-                if (errorsemantico = true) {
-                    p = p.sig;
-                }
+                
+                p = p.sig;
+                
 
                 ciclovariables();
 
