@@ -9,6 +9,7 @@ public class sintaxis {
     String nombreVariable;
     String tipo;
     String impresion = "";
+    String intermedio="";
     String evaluada = "";
     String valorTemp;
     lexico RefLexico;
@@ -73,15 +74,14 @@ public class sintaxis {
                             p = p.sig;
                             if (p.token == 119) {
                                 p = p.sig;
-
                                 variables();
+                                IntermedioData();
                                 statements();
-                                
                                 ciclostatements();
                                 if (p.token == 120) {
                                     impresion += ("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
                                     imprimirListaVariables();
-
+                                    System.out.println(intermedio);
                                     break;
                                 }
                             } else {
@@ -642,6 +642,7 @@ public class sintaxis {
                 if (s.nombre.equals(evaluada)) {
                     if (comprobarLongitud(s)) {
                         s.valor = valorTemp;
+                        intermedio+="ASIGNAR "+s.nombre+","+valorTemp+"\n";
                         break;
                     } else {
                         impSemantico(4);
@@ -673,5 +674,16 @@ public class sintaxis {
             }
         }
         return estado;
+    }
+    
+    private void IntermedioData(){
+        intermedio+="Segmento DATA\n";
+        TablaSimbolos c;
+        c=cabezaVariables;
+        do {
+            intermedio+="DECLARAR "+c.tipo+" "+c.nombre+"\n";
+            c=c.siguiente;
+        } while (c!=null);
+        intermedio+="Segmento CODE\n";
     }
 }

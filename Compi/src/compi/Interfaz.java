@@ -34,9 +34,7 @@ public class Interfaz extends javax.swing.JFrame {
   String arch;
   File file;
   
-    /**
-     * Creates new form Interfaz
-     */
+    
     public Interfaz() {
         
        
