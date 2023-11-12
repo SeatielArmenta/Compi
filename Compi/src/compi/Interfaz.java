@@ -19,6 +19,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 import java.nio.file.Files;
 
@@ -33,6 +35,7 @@ public class Interfaz extends javax.swing.JFrame {
   sintaxis sintx;
   String arch;
   File file;
+  String direccion="";
   
     
     public Interfaz() {
@@ -322,6 +325,7 @@ public class Interfaz extends javax.swing.JFrame {
             System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
             file=chooser.getSelectedFile();
             arch=chooser.getSelectedFile().getAbsolutePath();
+            direccion=arch;
             try {
             String contenido = new String(Files.readAllBytes(file.toPath()));
             jTextArea1.setText(contenido);
@@ -346,6 +350,7 @@ public class Interfaz extends javax.swing.JFrame {
            PrintWriter writer = new PrintWriter(file);
         writer.print("");
         writer.close();
+        
            
         FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
        
@@ -375,10 +380,32 @@ public class Interfaz extends javax.swing.JFrame {
          jTextArea2.append("\n"+sintx.impresion);
          RecorrerNodos(Lex.cabeza);
          RecorrerVariables(sintx.cabezaVariables);
+         
+         System.out.println(direccion);
+         System.out.println(extensionArchivo(direccion, "asm"));
+         System.out.println("intermedio \n"+sintaxis.intermedio);
+         
+         try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(extensionArchivo(direccion, "asm"),false))) {
+            
+            writer2.write(sintaxis.intermedio);
+            System.out.println("Data has been saved to the file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         
        
        } catch(Exception e){
            System.out.println(e);
        }
+    }
+    
+    private String extensionArchivo(String path,String extension){
+        int lastDotIndex = path.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            return path.substring(0, lastDotIndex + 1) + extension;
+        } else {
+            return path + "." + extension;
+        }
     }
     
     private void RecorrerNodos(nodo cabeza){

@@ -67,6 +67,7 @@ public class sintaxis {
     nodo p = null;
 
     public sintaxis(nodo n) {
+        intermedio="";
 
         try {
             p = n;
