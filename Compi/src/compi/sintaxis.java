@@ -20,6 +20,7 @@ public class sintaxis {
     boolean errorSintactico =false;
     boolean evaluacionVariable = false;
     ArrayList<String> tipos = new ArrayList<String>();
+    boolean negaBandera=false;
 
     List<String> nombresVistos = new ArrayList<>();
 
@@ -308,6 +309,9 @@ public class sintaxis {
                 if (p.token == 123) {
                     p = p.sig;
                     if (p.token == 100 || p.token == 101 || p.token == 102 || p.token == 117 || p.token == 116 || p.token == 104 || p.token == 103) {
+                        if (p.token==104) {
+                            negaBandera=true;
+                        }
                         if (p.token == 100) {
                             if (existeVariable(p)) {
                                 exp_sim();
@@ -641,8 +645,13 @@ public class sintaxis {
             do {
                 if (s.nombre.equals(evaluada)) {
                     if (comprobarLongitud(s)) {
-                        s.valor = valorTemp;
-                        intermedio+="ASIGNAR "+s.nombre+","+valorTemp+"\n";
+                        if (negaBandera) {
+                            s.valor = "-"+valorTemp;
+                            negaBandera=false;
+                        }else{
+                          s.valor = valorTemp;  
+                        }
+                        
                         break;
                     } else {
                         impSemantico(4);
