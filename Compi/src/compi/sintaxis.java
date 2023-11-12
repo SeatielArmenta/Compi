@@ -369,6 +369,7 @@ public class sintaxis {
                     p = p.sig;
                 }
                 evaluacionVariable = false;
+                
 
             }
 
@@ -433,7 +434,12 @@ public class sintaxis {
 
         if (p.token == 103 || p.token == 104 || p.token == 115) {
             evDirecta = false;
-
+            if (negaBandera) {
+                negaBandera=false;
+                valorTemp="-"+valorTemp;
+            }
+            
+            
             op_aditivo();
 
             exp_sim();
@@ -442,11 +448,15 @@ public class sintaxis {
     }
 
     private void op_aditivo() {
+        
         if (p.token == 103) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else if (p.token == 104) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else if (p.token == 115) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else {
             imprimirError(12);
@@ -455,6 +465,7 @@ public class sintaxis {
 
     private void signo() {
         if (p.token == 103) {
+            
             p = p.sig;
         } else if (p.token == 104) {
             p = p.sig;
@@ -514,10 +525,13 @@ public class sintaxis {
 
     private void op_mult() {
         if (p.token == 105) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else if (p.token == 106) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else if (p.token == 114) {
+            valorTemp+=p.lexema;
             p = p.sig;
         } else {
             imprimirError(14);
@@ -635,13 +649,18 @@ public class sintaxis {
     }
 
     private void agregarValor(nodo p) {
-        valorTemp = p.lexema;
+        if (evDirecta) {
+            valorTemp = p.lexema;
+        }else{
+            valorTemp += p.lexema;
+        }
+        
     }
 
     private void asignarValor() {
-        if (evDirecta) {
-            TablaSimbolos s;
+        TablaSimbolos s;
             s = cabezaVariables;
+        if (evDirecta) {
             do {
                 if (s.nombre.equals(evaluada)) {
                     if (comprobarLongitud(s)) {
@@ -662,6 +681,13 @@ public class sintaxis {
                     s = s.siguiente;
                 }
             } while (s != null);
+        }else{
+            while(s!=null){
+                if(s.nombre.equals(evaluada)){
+                    s.valor=valorTemp;
+                }
+                s=s.siguiente;
+            }
         }
 
     }
@@ -685,6 +711,9 @@ public class sintaxis {
         return estado;
     }
     
+    private void transformarPosfijo(){
+        
+    }
     private void IntermedioData(){
         intermedio+="Segmento DATA\n";
         TablaSimbolos c;
