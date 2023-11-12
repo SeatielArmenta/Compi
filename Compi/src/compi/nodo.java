@@ -5,10 +5,6 @@
  */
 package compi;
 
-/**
- *
- * @author seati
- */
 public class nodo {
     String lexema;
     int token;

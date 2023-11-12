@@ -1,7 +1,10 @@
 package compi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 public class sintaxis {
 
@@ -9,7 +12,7 @@ public class sintaxis {
     String nombreVariable;
     String tipo;
     String impresion = "";
-    String intermedio="";
+    static String intermedio="";
     String evaluada = "";
     String valorTemp;
     lexico RefLexico;
@@ -21,6 +24,7 @@ public class sintaxis {
     boolean evaluacionVariable = false;
     ArrayList<String> tipos = new ArrayList<String>();
     boolean negaBandera=false;
+    private static int tempCount = 1;
 
     List<String> nombresVistos = new ArrayList<>();
 
@@ -355,6 +359,7 @@ public class sintaxis {
                     if (p.token == 125) {
                         limpiarComprobar();
                         asignarValor();
+                       
                         p = p.sig;
 
                     } else {
@@ -586,7 +591,7 @@ public class sintaxis {
     private void imprimirListaVariables() {
         S = cabezaVariables;
         while (S != null) {
-            System.out.println("num linea :" + S.numLinea + " tipo: " + S.tipo + " nombre variable: " + S.nombre + " con valor " + S.valor);
+          //  System.out.println("num linea :" + S.numLinea + " tipo: " + S.tipo + " nombre variable: " + S.nombre + " con valor " + S.valor);
             S = S.siguiente;
         }
     }
@@ -613,18 +618,13 @@ public class sintaxis {
         String tipovar = tipos.get(0);
         for (String elemento : tipos) {
             if (!elemento.equals(tipovar)) {
-                System.out.println(elemento);
+                
                 correcto = false;
                 break;
             }
         }
 
-        if (correcto) {
-            System.out.println("ok");
-        } else {
-            impSemantico(3);
-            System.out.println("Error pibe");
-        }
+
 
     }
 
@@ -634,7 +634,7 @@ public class sintaxis {
         do {
             if (s.nombre.equals(p.lexema)) {
                 if (s.tipo.equals("string")) {
-                    System.out.println("Se puede imprimir");
+                  
                     break;
                 } else {
                     impresion += "Error de impresion: ";
@@ -670,7 +670,7 @@ public class sintaxis {
                         }else{
                           s.valor = valorTemp;  
                         }
-                        
+                        intermedio+="ASIGNAR "+s.nombre+","+valorTemp+"\n";
                         break;
                     } else {
                         impSemantico(4);
@@ -685,6 +685,8 @@ public class sintaxis {
             while(s!=null){
                 if(s.nombre.equals(evaluada)){
                     s.valor=valorTemp;
+                    generarCodigoIntermedio(valorTemp);
+                    intermedio+="ASIGNAR "+s.nombre+",TEMP"+tempCount+"\n";
                 }
                 s=s.siguiente;
             }
@@ -711,9 +713,111 @@ public class sintaxis {
         return estado;
     }
     
-    private void transformarPosfijo(){
+    
+     
+     public static void generarCodigoIntermedio(String expresion) {
+        Stack<String> pilaOperadores = new Stack<>();
+        Stack<String> pilaOperandos = new Stack<>();
+
+        int i = 0;
+        while (i < expresion.length()) {
+            char caracter = expresion.charAt(i);
+
+            if (Character.isDigit(caracter)) {
+                // Si el caracter es un dígito, agrega el número a la pila de operandos
+                int inicio = i;
+                while (i < expresion.length() && (Character.isDigit(expresion.charAt(i)) || expresion.charAt(i) == '.')) {
+                    i++;
+                }
+                pilaOperandos.push(expresion.substring(inicio, i));
+                i--; // Ajusta el índice para el siguiente ciclo
+            } else if (Character.isLetter(caracter)) {
+                // Si el caracter es una letra, es una variable
+                int inicio = i;
+                while (i < expresion.length() && Character.isLetterOrDigit(expresion.charAt(i))) {
+                    i++;
+                }
+                pilaOperandos.push(expresion.substring(inicio, i));
+                i--; // Ajusta el índice para el siguiente ciclo
+            } else if (esOperador(caracter)) {
+                // Si el caracter es un operador, maneja la jerarquía de operaciones
+                while (!pilaOperadores.isEmpty() && tienePrecedencia(pilaOperadores.peek(), String.valueOf(caracter))) {
+                    // Genera el código intermedio
+                    String operador = pilaOperadores.pop();
+                    String operando2 = pilaOperandos.pop();
+                    String operando1 = pilaOperandos.pop();
+                    String temp = generarTemp();
+                    generarCodigo(operador, operando1, operando2, temp);
+                    pilaOperandos.push(temp);
+                }
+                // Agrega el operador actual a la pila de operadores
+                pilaOperadores.push(convertirOperador(String.valueOf(caracter)));
+            }
+
+            i++;
+        }
+
+        // Procesa los operadores restantes en la pila de operadores
+        while (!pilaOperadores.isEmpty()) {
+            String operador = pilaOperadores.pop();
+            String operando2 = pilaOperandos.pop();
+            String operando1 = pilaOperandos.pop();
+            String temp = generarTemp();
+            generarCodigo(operador, operando1, operando2, temp);
+            pilaOperandos.push(temp);
+        }
+
         
     }
+
+    public static boolean esOperador(char c) {
+        return c == '+' || c == '-' || c == '*' || c == '/';
+    }
+
+    public static boolean tienePrecedencia(String op1, String op2) {
+        // Define la precedencia de los operadores
+        if ((op1.equals("*") || op1.equals("/")) && (op2.equals("+") || op2.equals("-")))
+            return true;
+        return false;
+    }
+
+    public static String generarTemp() {
+        // Genera nombres de variables temporales únicas
+        return "TEMP" + tempCount++;
+    }
+
+    public static void generarCodigo(String operador, String operando1, String operando2, String resultado) {
+        // Convierte los operadores a palabras clave
+        if (operador.equals("+")) {
+            operador = "SUM";
+        } else if (operador.equals("-")) {
+            operador = "SUB";
+        } else if (operador.equals("*")) {
+            operador = "MUL";
+        } else if (operador.equals("/")) {
+            operador = "DIV";
+        }
+
+        // Imprime el código intermedio con la instrucción de asignación
+        intermedio+=operador + " " + operando1 + ", " + operando2 + " : ASIGNAR " + resultado+"\n";
+    }
+
+    public static String convertirOperador(String operador) {
+        // Convierte los operadores a palabras clave
+        if (operador.equals("+")) {
+            return "SUM";
+        } else if (operador.equals("-")) {
+            return "SUB";
+        } else if (operador.equals("*")) {
+            return "MUL";
+        } else if (operador.equals("/")) {
+            return "DIV";
+        }
+        return operador;
+    }
+    
+    
+    
     private void IntermedioData(){
         intermedio+="Segmento DATA\n";
         TablaSimbolos c;
