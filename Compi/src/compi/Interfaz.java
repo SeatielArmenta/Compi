@@ -23,6 +23,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 
@@ -381,14 +383,19 @@ public class Interfaz extends javax.swing.JFrame {
          RecorrerNodos(Lex.cabeza);
          RecorrerVariables(sintx.cabezaVariables);
          
-         System.out.println(direccion);
-         System.out.println(extensionArchivo(direccion, "asm"));
-         System.out.println("intermedio \n"+sintaxis.intermedio);
+         Path path = Paths.get(direccion);
+        String directory = path.getParent().toString();
+         directory+="\\intermedio";
+        /* System.out.println(extensionArchivo(direccion, "asm"));
+         System.out.println("intermedio \n"+sintaxis.intermedio);*/
          
-         try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(extensionArchivo(direccion, "asm"),false))) {
+         try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(extensionArchivo(directory, "txt"),false))) {
             
             writer2.write(sintaxis.intermedio);
             System.out.println("Data has been saved to the file.");
+            writer2.close();
+            IntermedioToMASM trad=new IntermedioToMASM(extensionArchivo(directory, "txt"),sintx.tempCount);
+            sintx.tempCount=0;
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -24,7 +24,7 @@ public class sintaxis {
     boolean evaluacionVariable = false;
     ArrayList<String> tipos = new ArrayList<String>();
     boolean negaBandera=false;
-    private static int tempCount = 1;
+    public static int tempCount = 1;
 
     List<String> nombresVistos = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class sintaxis {
                                 if (p.token == 120) {
                                     impresion += ("Analisis sintactico completado correctamente 🐕🐕🐶🐶");
                                     imprimirListaVariables();
-                                    System.out.println(intermedio);
+                                    
                                     break;
                                 }
                             } else {
@@ -671,7 +671,7 @@ public class sintaxis {
                         }else{
                           s.valor = valorTemp;  
                         }
-                        intermedio+="ASIGNAR "+s.nombre+","+valorTemp+"\n";
+                        intermedio+="ASIGNAR "+s.nombre+" "+valorTemp+"\n";
                         break;
                     } else {
                         impSemantico(4);
@@ -687,7 +687,7 @@ public class sintaxis {
                 if(s.nombre.equals(evaluada)){
                     s.valor=valorTemp;
                     generarCodigoIntermedio(valorTemp);
-                    intermedio+="ASIGNAR "+s.nombre+",TEMP"+tempCount+"\n";
+                    intermedio+="ASIGNAR "+s.nombre+" TEMP"+(tempCount-1)+"\n";
                 }
                 s=s.siguiente;
             }
@@ -790,7 +790,7 @@ public class sintaxis {
     public static void generarCodigo(String operador, String operando1, String operando2, String resultado) {
         // Convierte los operadores a palabras clave
         if (operador.equals("+")) {
-            operador = "SUM";
+            operador = "ADD";
         } else if (operador.equals("-")) {
             operador = "SUB";
         } else if (operador.equals("*")) {
@@ -800,13 +800,13 @@ public class sintaxis {
         }
 
         // Imprime el código intermedio con la instrucción de asignación
-        intermedio+=operador + " " + operando1 + ", " + operando2 + " : ASIGNAR " + resultado+"\n";
+        intermedio+=operador + " " + operando1 + " " + operando2 + "\nASIGNAR " + resultado+"\n";
     }
 
     public static String convertirOperador(String operador) {
         // Convierte los operadores a palabras clave
         if (operador.equals("+")) {
-            return "SUM";
+            return "ADD";
         } else if (operador.equals("-")) {
             return "SUB";
         } else if (operador.equals("*")) {
