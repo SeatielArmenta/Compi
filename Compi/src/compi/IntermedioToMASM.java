@@ -44,15 +44,16 @@ public class IntermedioToMASM {
         return asmResultado;
     }
 
-    public IntermedioToMASM(String dir,int temps) {
-        
+    public IntermedioToMASM(String dir,int temps, String dir2) {
+        //System.out.println(dir);
+        //System.out.println(dir2);
         for (int i = 1; i < temps+1; i++) {
             declaraciones.add("temp"+i+" dword ?");
         }
         try {
-           List<String> lst = Files.readAllLines(Paths.get("C:\\compi\\intermedio.txt"));
+           List<String> lst = Files.readAllLines(Paths.get(dir));
         List<String> assm=convertirASM(lst);
-         escribirArchivoASM("C:\\compi\\intermedio.asm", assm);
+         escribirArchivoASM(dir2+".asm", assm);
             System.out.println("Archivo .asm creado exitosamente.");
             asmResultado.clear();
             operaciones.clear();
@@ -66,7 +67,7 @@ public class IntermedioToMASM {
     }
      public static void escribirArchivoASM(String rutaArchivo, List<String> contenido) throws IOException {
         Path archivoPath = Paths.get(rutaArchivo);
-
+         System.out.println(rutaArchivo);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoPath.toFile()))) {
             for (String linea : contenido) {
                 writer.write(linea);

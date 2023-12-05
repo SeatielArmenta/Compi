@@ -394,7 +394,7 @@ public class Interfaz extends javax.swing.JFrame {
             writer2.write(sintaxis.intermedio);
             System.out.println("Data has been saved to the file.");
             writer2.close();
-            IntermedioToMASM trad=new IntermedioToMASM(extensionArchivo(directory, "txt"),sintx.tempCount);
+            IntermedioToMASM trad=new IntermedioToMASM(extensionArchivo(directory, "txt"),sintx.tempCount,directory);
             sintx.tempCount=0;
         } catch (IOException e) {
             e.printStackTrace();
