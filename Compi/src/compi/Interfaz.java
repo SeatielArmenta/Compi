@@ -90,8 +90,10 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
+        jTextArea1.setText("Archivo no ha sido seleccionado o creado.");
         jTextArea1.setName("AreaCodigo"); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
         jTextArea1.setFont(new Font("Monospaced",Font.PLAIN,12));
@@ -137,6 +139,7 @@ public class Interfaz extends javax.swing.JFrame {
         });
 
         jButton2.setText("Compilar");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -204,8 +207,19 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel4.setText("Lista de variables");
 
         btnNuevo1.setText("Nuevo");
+        btnNuevo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevo1ActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
+        btnGuardar.setEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnEjecutar.setText("Ejecutar");
 
@@ -232,26 +246,26 @@ public class Interfaz extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(LexicoLabel)
-                        .addGap(13, 13, 13)
-                        .addComponent(LexicoStatusLabel)
-                        .addGap(24, 24, 24)
-                        .addComponent(SintaxisLabel1)
-                        .addGap(12, 12, 12)
-                        .addComponent(SintaxisStatusLabel1)
-                        .addGap(44, 44, 44)
-                        .addComponent(SemanticoLabel)
                         .addGap(10, 10, 10)
-                        .addComponent(SemanticoStatusLabel))
-                    .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(LexicoLabel)
+                                .addGap(13, 13, 13)
+                                .addComponent(LexicoStatusLabel)
+                                .addGap(24, 24, 24)
+                                .addComponent(SintaxisLabel1)
+                                .addGap(12, 12, 12)
+                                .addComponent(SintaxisStatusLabel1)
+                                .addGap(44, 44, 44)
+                                .addComponent(SemanticoLabel)
+                                .addGap(10, 10, 10)
+                                .addComponent(SemanticoStatusLabel))
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(8, 8, 8)
                                 .addComponent(btnNuevo1)
@@ -262,8 +276,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 .addGap(16, 16, 16)
                                 .addComponent(jButton2)
                                 .addGap(175, 175, 175)
-                                .addComponent(btnEjecutar))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btnEjecutar))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(97, 97, 97)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -288,9 +304,9 @@ public class Interfaz extends javax.swing.JFrame {
                             .addComponent(btnGuardar)
                             .addComponent(jButton2)
                             .addComponent(btnEjecutar))))
-                .addGap(6, 6, 6)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(LexicoLabel)
                     .addComponent(LexicoStatusLabel)
@@ -332,7 +348,11 @@ public class Interfaz extends javax.swing.JFrame {
             String contenido = new String(Files.readAllBytes(file.toPath()));
             jTextArea1.setText(contenido);
             //jTextArea1.read(new BufferedReader(new FileReader(arch)), null);
-            
+                System.out.println(direccion);
+                System.out.println(arch);
+                jTextArea1.setEditable(true);
+                btnGuardar.setEnabled(true);
+                jButton2.setEnabled(true);
 
         } catch (Exception e){
 
@@ -448,6 +468,22 @@ public class Interfaz extends javax.swing.JFrame {
        
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void btnNuevo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevo1ActionPerformed
+        createTxtFile();
+    }//GEN-LAST:event_btnNuevo1ActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(extensionArchivo(direccion, "txt"),false))) {
+            
+            writer2.write(jTextArea1.getText());
+            System.out.println("Data has been saved to the file.");
+            writer2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -484,6 +520,59 @@ public class Interfaz extends javax.swing.JFrame {
         
         
 
+    }
+    
+    private void createTxtFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fileChooser.showSaveDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedDirectory = fileChooser.getSelectedFile();
+
+            // Prompt user for the file name
+            String fileName = JOptionPane.showInputDialog("Enter file name");
+            fileName=fileName+".txt";
+            if (fileName != null && !fileName.trim().isEmpty()) {
+                File newFile = new File(selectedDirectory, fileName);
+                try {
+                    if (newFile.createNewFile()) {
+                        // You can add content to the file if needed
+                        try (FileWriter writer = new FileWriter(newFile)) {
+                            writer.write("/* NUEVO ARCHIVO */");
+                            System.out.println("File created successfully: " + newFile.getAbsolutePath());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("File already exists: " + newFile.getAbsolutePath());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                file=newFile.getAbsoluteFile();
+                arch=newFile.getAbsoluteFile().getAbsolutePath();
+                System.out.println(file);
+                System.out.println(arch);
+                direccion=arch;
+                try {
+                String contenido = new String(Files.readAllBytes(newFile.toPath()));
+                jTextArea1.setText(contenido);
+                //jTextArea1.read(new BufferedReader(new FileReader(arch)), null);
+                jTextArea1.setEditable(true);
+                btnGuardar.setEnabled(true);
+                jButton2.setEnabled(true);
+            
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+            } else {
+                System.out.println("Invalid file name. File creation canceled.");
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

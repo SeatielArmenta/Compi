@@ -150,6 +150,7 @@ public class IntermedioToMASM {
                              declaraciones.replaceAll(registro -> registro.equals(valorBuscado) ? nuevoValor : registro);
 
                         }else{
+                            operaciones.add("xor ax,ax");
                         if (multdiv==false) {
                             if (Character.isLetter(palabras.get(1).charAt(0))&&Character.isLetter(palabras.get(2).charAt(0))) {
                                 operaciones.add("mov bl, "+palabras.get(2));
